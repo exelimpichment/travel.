@@ -2,10 +2,12 @@ import React from 'react';
 import { useState } from 'react';
 import styled from 'styled-components';
 import imgVertical from '../assets/mntn_vertical.jpg';
+import imgHorizontal from '../assets/mntn_horizontal.jpg';
 import { GiMountains } from 'react-icons/gi';
 import { GoogleLoginButton, FacebookLoginButton, NavigationBar } from './index';
 import { AnimatePresence } from 'framer-motion';
 import { useAuthState, auth } from '../firebase/firebaseConfig';
+import { motion } from 'framer-motion';
 
 function HeroPage() {
   const [user, loading, error] = useAuthState(auth);
@@ -20,13 +22,14 @@ function HeroPage() {
       </AnimatePresence>
 
       <div className='container'>
-        <button
+        <motion.button
+          whileHover={{ scale: 1.1 }}
           type='button'
           className='menuToggle'
           onClick={() => setToggleNavbarOpen(!toggleNavbarOpen)}
         >
           <GiMountains></GiMountains>
-        </button>
+        </motion.button>
 
         <div className='centrePiece'>
           <div className='text-container'>
@@ -74,16 +77,12 @@ const Wrapper = styled.main`
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      /* height: 500px; */
-
       .text-container {
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
       }
-
-      /* ================================================================ */
     }
 
     h1 {
@@ -99,6 +98,10 @@ const Wrapper = styled.main`
       font-family: var(--secondaryFont);
       font-size: 1.35rem;
       line-height: 1.7rem;
+    }
+
+    @media (min-width: 490px) {
+      background-image: url(${imgHorizontal});
     }
   }
 `;
