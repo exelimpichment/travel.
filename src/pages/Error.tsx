@@ -29,7 +29,6 @@ function Error() {
 export default Error;
 
 const Wrapper = styled.div`
-  position: relative;
   .container {
     display: flex;
     flex-direction: column;
@@ -53,12 +52,12 @@ const Wrapper = styled.div`
 
     h1 {
       font-size: 4rem;
-      font-weight: 600;
+      font-weight: 500;
       margin-bottom: 0.3rem;
     }
 
     h2 {
-      font-weight: 500;
+      font-weight: 400;
       font-size: 1.25rem;
       padding-bottom: 3px;
     }
@@ -67,6 +66,7 @@ const Wrapper = styled.div`
       font-size: 1.25rem;
       color: #32b2ff;
       cursor: pointer;
+      font-weight: 400;
 
       &:hover {
         color: #0000ee;
@@ -75,6 +75,20 @@ const Wrapper = styled.div`
 
     @media (min-width: 490px) {
       background-image: url(${errorPageHorizontal});
+      color: #35383a;
+      h1 {
+        font-size: 8rem;
+        font-weight: 600;
+        margin-bottom: 0.3rem;
+      }
+      h2 {
+        font-weight: 500;
+        font-size: 2rem;
+        padding-bottom: 9px;
+      }
+      button {
+        font-size: 1.5rem;
+      }
     }
   }
 `;

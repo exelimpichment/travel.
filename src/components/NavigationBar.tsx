@@ -2,10 +2,11 @@ import React from 'react';
 import links from '../utilities/links';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
-import { GiMountains } from 'react-icons/gi';
 import { handleSignOut } from '../firebase/firebaseConfig';
+import { useNavigate } from 'react-router-dom';
 
 function NavigationBar() {
+  const navigate = useNavigate();
   return (
     <Wrapper>
       {links.map((link) => {
@@ -18,9 +19,9 @@ function NavigationBar() {
             transition={{ duration: 0.3 }}
           >
             <button
+              onClick={() => navigate(link.path)}
               type='button'
               className='link'
-              onClick={() => console.log(link.text)}
             >
               <>{link.icon}</>
             </button>

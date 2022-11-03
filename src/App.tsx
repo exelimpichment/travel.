@@ -8,6 +8,8 @@ import MusicPlayer from './pages/MusicPlayer';
 import Error from './pages/Error';
 
 function App() {
+  console.log(typeof App);
+
   return (
     <BrowserRouter>
       <Routes>

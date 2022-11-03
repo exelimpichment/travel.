@@ -3,7 +3,6 @@ import { BiTrip } from 'react-icons/bi';
 import { GrGroup } from 'react-icons/gr';
 import { BsMusicNote } from 'react-icons/bs';
 import { BsFillBookmarkHeartFill } from 'react-icons/bs';
-// import { GrGroup } from 'react-icons/gr';
 
 interface ILink {
   id: number;
@@ -15,27 +14,27 @@ interface ILink {
 const links: ILink[] = [
   {
     id: 1,
-    text: 'Start new trip',
-    path: '/',
+    text: 'NewJourney',
+    path: '/new-journey',
     icon: <BiTrip />,
   },
   {
     id: 2,
     text: 'Friends',
-    path: 'all-jobs',
+    path: '/friends',
     icon: <GrGroup />,
   },
   {
     id: 3,
-    text: 'Friends journeys',
-    path: 'add-job',
+    text: 'Bookmarks',
+    path: '/bookmarks',
     icon: <BsFillBookmarkHeartFill />,
   },
 
   {
     id: 4,
     text: 'Music',
-    path: 'music',
+    path: '/music-player',
     icon: <BsMusicNote />,
   },
 ];

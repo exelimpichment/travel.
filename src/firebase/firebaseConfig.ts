@@ -28,7 +28,7 @@ const facebookProvider = new FacebookAuthProvider();
   export {signInWithRedirect, signOut, handleSignOut, useAuthState, facebookProvider}
 
 
-//   ================================
+//   ============TEMP====================
 const handleSignOut = () => {
         console.log("sign out");
         
