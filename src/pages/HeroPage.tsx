@@ -1,5 +1,4 @@
-import React, { useEffect } from 'react';
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import imgVertical from '../assets/mntn_vertical.jpg';
 import imgHorizontal from '../assets/mntn_horizontal.jpg';
@@ -8,12 +7,22 @@ import { GoogleLoginButton, FacebookLoginButton, NavigationBar } from './index';
 import { AnimatePresence } from 'framer-motion';
 import { useAuthState, auth } from '../firebase/firebaseConfig';
 import { motion } from 'framer-motion';
+import { getAttractionsData } from '../features/NewJourney/NewJourneySlice';
+import { useSelector, useDispatch } from 'react-redux';
+import { useAppDispatch } from '../hooks/reduxHooks';
 
 function HeroPage() {
   const [user, loading, error] = useAuthState(auth);
   console.log(user, loading, error);
 
   const [toggleNavbarOpen, setToggleNavbarOpen] = useState(false);
+  const [temp, setTemp] = useState({});
+
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(getAttractionsData());
+  }, []);
 
   return (
     <Wrapper>
