@@ -7,7 +7,6 @@ import { GoogleLoginButton, FacebookLoginButton, NavigationBar } from './index';
 import { AnimatePresence } from 'framer-motion';
 import { useAuthState, auth } from '../firebase/firebaseConfig';
 import { motion } from 'framer-motion';
-import { getAttractionsData } from '../features/NewJourney/NewJourneySlice';
 import { useSelector, useDispatch } from 'react-redux';
 import { useAppDispatch } from '../hooks/reduxHooks';
 
@@ -19,10 +18,6 @@ function HeroPage() {
   const [temp, setTemp] = useState({});
 
   const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    dispatch(getAttractionsData());
-  }, []);
 
   return (
     <Wrapper>

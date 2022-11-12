@@ -2,39 +2,45 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from '../../app/store';
 import axios from 'axios';
+import GoogleMapReact from '../../../node_modules/@types/google-map-react/index';
 
-const options = {
-  method: 'GET',
-  url: 'https://travel-advisor.p.rapidapi.com/attractions/list-in-boundary',
-  params: {
-    tr_longitude: '109.262909',
-    tr_latitude: '12.346705',
-    bl_longitude: '109.095887',
-    bl_latitude: '12.113245',
-    // currency: 'USD',
-    // lunit: 'km',
-    // lang: 'en_US'
-  },
-  headers: {
-    'X-RapidAPI-Key': '83977db5eamshb16c568adbe75abp16ab34jsn4f1c341cc44d',
-    'X-RapidAPI-Host': 'travel-advisor.p.rapidapi.com',
-  },
-};
+let apiURL: string =
+  'https://travel-advisor.p.rapidapi.com/attractions/list-in-boundary';
 
 interface AttractionsResponse {
   [key: string]: object | object[];
   data: object[];
 }
 
+interface Bounds {
+  ne: { lat: number; lng: number };
+  sw: { lat: number; lng: number };
+}
+
 export const getAttractionsData = createAsyncThunk(
   'newJourney/getAttractionsData',
-  async (thunkAPI) => {
+  async (position: Bounds, thunkAPI) => {
     try {
-      const response = await axios.get<AttractionsResponse>(
-        options.url,
-        options
+      console.log(
+        position.ne.lng,
+        position.ne.lat,
+        position.sw.lng,
+        position.sw.lat
       );
-      console.log(response.data);
+
+      const response = await axios.get<AttractionsResponse>(apiURL, {
+        params: {
+          tr_longitude: position.ne.lng,
+          tr_latitude: position.ne.lat,
+          bl_longitude: position.sw.lng,
+          bl_latitude: position.sw.lat,
+        },
+        headers: {
+          'X-RapidAPI-Key':
+            '83977db5eamshb16c568adbe75abp16ab34jsn4f1c341cc44d',
+          'X-RapidAPI-Host': 'travel-advisor.p.rapidapi.com',
+        },
+      });
 
       return response.data;
     } catch (error: any) {
@@ -46,18 +52,33 @@ export const getAttractionsData = createAsyncThunk(
 interface AttractionsState {
   attractions: object[] | undefined;
   loading: 'idle' | 'true' | 'false' | 'failed';
+  coordinates: GoogleMapReact.Coords | undefined;
+  bounds: {
+    ne: { lat: number; lng: number };
+    sw: { lat: number; lng: number };
+  };
 }
 
 const initialState: AttractionsState = {
-  attractions: [],
   loading: 'idle',
+  attractions: [],
+  coordinates: { lat: 0, lng: 0 },
+  bounds: {
+    ne: { lat: 0, lng: 0 },
+    sw: { lat: 0, lng: 0 },
+  },
 };
 
 export const newJourneySlice = createSlice({
   name: 'newJourney',
   initialState,
   reducers: {
-    // standard reducers
+    setCoordinates: (state, action) => {
+      state.coordinates = action.payload;
+    },
+    setBounds: (state, action) => {
+      state.bounds = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(
@@ -82,7 +103,7 @@ export const newJourneySlice = createSlice({
   },
 });
 
-export const {} = newJourneySlice.actions;
+export const { setCoordinates, setBounds } = newJourneySlice.actions;
 
 export const selectCount = (state: RootState) => state.newJourney.attractions;
 
