@@ -53,6 +53,7 @@ interface AttractionsState {
   attractions: object[] | undefined;
   loading: 'idle' | 'true' | 'false' | 'failed';
   coordinates: GoogleMapReact.Coords | undefined;
+  zoom: number;
   bounds: {
     ne: { lat: number; lng: number };
     sw: { lat: number; lng: number };
@@ -63,11 +64,15 @@ const initialState: AttractionsState = {
   loading: 'idle',
   attractions: [],
   coordinates: { lat: 0, lng: 0 },
+  zoom: 12,
   bounds: {
     ne: { lat: 0, lng: 0 },
     sw: { lat: 0, lng: 0 },
   },
 };
+
+type Decrement = 'decrement';
+type Increment = 'increment';
 
 export const newJourneySlice = createSlice({
   name: 'newJourney',
@@ -78,6 +83,14 @@ export const newJourneySlice = createSlice({
     },
     setBounds: (state, action) => {
       state.bounds = action.payload;
+    },
+    setZoom: (state: AttractionsState, action) => {
+      if (action.payload === 'decrement' && state.zoom > 3) {
+        state.zoom -= 1;
+      }
+      if (action.payload === 'increment' && state.zoom < 22) {
+        state.zoom += 1;
+      }
     },
   },
   extraReducers: (builder) => {
@@ -103,7 +116,7 @@ export const newJourneySlice = createSlice({
   },
 });
 
-export const { setCoordinates, setBounds } = newJourneySlice.actions;
+export const { setCoordinates, setBounds, setZoom } = newJourneySlice.actions;
 
 export const selectCount = (state: RootState) => state.newJourney.attractions;
 

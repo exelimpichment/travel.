@@ -43,6 +43,7 @@ function NavigationBar() {
 export default NavigationBar;
 
 const Wrapper = styled.nav`
+  /* z-index: 1000; */
   position: absolute;
 
   .link-container {

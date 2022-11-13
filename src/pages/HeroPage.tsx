@@ -15,7 +15,6 @@ function HeroPage() {
   console.log(user, loading, error);
 
   const [toggleNavbarOpen, setToggleNavbarOpen] = useState(false);
-  const [temp, setTemp] = useState({});
 
   const dispatch = useAppDispatch();
 
