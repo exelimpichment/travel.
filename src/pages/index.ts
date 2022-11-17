@@ -1,7 +1,19 @@
-import HeroPage from "./HeroPage";
-import GoogleLoginButton from "../components/UI/GoogleLoginButton";
-import FacebookLoginButton from "../components/UI/FacebookLoginButton";
-import NavigationBar from "../components/NavigationBar";
+import NavigationBar from '../components/NavigationBar';
+import AnimatedRoutes from './AnimatedRoutes';
+import Bookmarks from './Bookmarks';
+import Error from './Error';
+import Friends from './Friends';
+import HeroPage from './HeroPage';
+import MusicPlayer from './MusicPlayer';
+import NewJourney from './NewJourney';
 
-
-export {HeroPage, GoogleLoginButton, FacebookLoginButton, NavigationBar} 
+export {
+  NavigationBar,
+  Bookmarks,
+  Error,
+  Friends,
+  HeroPage,
+  MusicPlayer,
+  NewJourney,
+  AnimatedRoutes,
+};

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import styled from 'styled-components';
 import GoogleMapReact from 'google-map-react';
 import { useAppSelector, useAppDispatch } from '../hooks/reduxHooks';
@@ -11,9 +11,25 @@ import {
 import mapStyle from '../components/UI/mapStyles';
 import imgHorizontal from '../assets/mntn_horizontal.jpg';
 import ZoomButton from '../components/UI/ZoomButton';
+import { motion } from 'framer-motion';
+import AttractionsSection from '../components/AttractionsSection';
 
 function NewJourney() {
+  // useEffect(() => {
+  //   // Google Analytics
+  //   console.log(location);
+  // }, [location]);
+  const [width, setWidth] = useState(0);
+  const mapRef = useRef<HTMLInputElement>(null);
   const dispatch = useAppDispatch();
+
+  // dangerous piece of code. hope i got it right
+  // useLayoutEffect(() => {
+  //   if (mapRef.current != null) {
+  //     setWidth(mapRef.current.offsetWidth);
+  //   }
+  //   console.log(width);
+  // });
 
   const {
     newJourney: { coordinates, bounds, zoom },
@@ -73,10 +89,20 @@ function NewJourney() {
     zoomControl: false,
   };
 
+  let innerWidth = window.innerWidth;
+
   return (
     <Wrapper>
-      <div
+      {/* ================================================ */}
+      <motion.div
+        initial={{ x: -innerWidth * 0.6 }}
+        // 0 - innerWidth of map div
+        animate={{ x: 0 }}
+        exit={{ x: -innerWidth * 0.6 }}
+        transition={{ duration: 1, delay: 0.3 }}
+        // ==============
         className='map-container'
+        // ref={mapRef}
         style={{
           borderRadius: '0 3rem 3rem 0',
           overflow: 'hidden',
@@ -99,8 +125,17 @@ function NewJourney() {
             );
           }}
         ></GoogleMapReact>
-      </div>
-      <div className='attraction-section'>test</div>
+      </motion.div>
+      {/* ================================================ */}
+      <motion.div
+        initial={{ x: innerWidth + 1000 }}
+        //  innerWidth of window + with of div
+        animate={{ x: 0 }}
+        exit={{ x: innerWidth + 1000 }}
+        transition={{ duration: 1, delay: 0.3 }}
+      >
+        <AttractionsSection />
+      </motion.div>
     </Wrapper>
   );
 }

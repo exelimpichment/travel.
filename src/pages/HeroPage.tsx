@@ -3,7 +3,8 @@ import styled from 'styled-components';
 import imgVertical from '../assets/mntn_vertical.jpg';
 import imgHorizontal from '../assets/mntn_horizontal.jpg';
 import { GiMountains } from 'react-icons/gi';
-import { GoogleLoginButton, FacebookLoginButton, NavigationBar } from './index';
+import GoogleLoginButton from '../components/UI/GoogleLoginButton';
+import FacebookLoginButton from '../components/UI/FacebookLoginButton';
 import { AnimatePresence } from 'framer-motion';
 import { useAuthState, auth } from '../firebase/firebaseConfig';
 import { motion } from 'framer-motion';
@@ -20,30 +21,33 @@ function HeroPage() {
 
   return (
     <Wrapper>
-      <AnimatePresence>
-        {toggleNavbarOpen && <NavigationBar></NavigationBar>}
-      </AnimatePresence>
-
       <div className='container'>
-        <motion.button
-          whileHover={{ scale: 1.1 }}
-          type='button'
-          className='menuToggle'
-          onClick={() => setToggleNavbarOpen(!toggleNavbarOpen)}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className='centrePiece'
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.5 }}
         >
-          <GiMountains></GiMountains>
-        </motion.button>
-
-        <div className='centrePiece'>
-          <div className='text-container'>
-            <h1>Travel.</h1>
-            <p>Small app with</p>
-            <p>big heart</p>
+          <div>
+            <div className='text-container'>
+              <h1>Travel.</h1>
+              <p>Small app with</p>
+              <p>big heart</p>
+            </div>
           </div>
-        </div>
+        </motion.div>
 
-        <GoogleLoginButton />
-        <FacebookLoginButton />
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className='centrePiece'
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <GoogleLoginButton />
+          <FacebookLoginButton />
+        </motion.div>
       </div>
     </Wrapper>
   );

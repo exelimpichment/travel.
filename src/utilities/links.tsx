@@ -3,6 +3,7 @@ import { BiTrip } from 'react-icons/bi';
 import { GrGroup } from 'react-icons/gr';
 import { BsMusicNote } from 'react-icons/bs';
 import { BsFillBookmarkHeartFill } from 'react-icons/bs';
+import { GoSignOut } from 'react-icons/go';
 
 interface ILink {
   id: number;
@@ -36,6 +37,12 @@ const links: ILink[] = [
     text: 'Music',
     path: '/music-player',
     icon: <BsMusicNote />,
+  },
+  {
+    id: 5,
+    text: 'SignOut',
+    path: '/',
+    icon: <GoSignOut />,
   },
 ];
 

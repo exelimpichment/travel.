@@ -1,34 +1,20 @@
-import React from 'react';
+import React, { useState } from 'react';
 import links from '../utilities/links';
 import styled from 'styled-components';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+
 import { handleSignOut } from '../firebase/firebaseConfig';
 import { useNavigate } from 'react-router-dom';
+import { GiMountains } from 'react-icons/gi';
 
-function NavigationBar() {
+function NavigationBar2() {
+  const [toggleNavbarOpen, setToggleNavbarOpen] = useState(false);
+
   const navigate = useNavigate();
   return (
-    <Wrapper>
-      {links.map((link) => {
-        return (
-          <motion.div
-            key={link.id}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            <button
-              onClick={() => navigate(link.path)}
-              type='button'
-              className='link'
-            >
-              <>{link.icon}</>
-            </button>
-          </motion.div>
-        );
-      })}
+    <>
       <button
+        style={{ position: 'absolute', top: 340, left: 3, zIndex: '999' }}
         type='button'
         onClick={() => {
           handleSignOut();
@@ -36,31 +22,92 @@ function NavigationBar() {
       >
         sign out
       </button>
-    </Wrapper>
+      <Wrapper>
+        <div className='navbar-container'>
+          {/* =========TOGGLE_BUTTON====== */}
+          <motion.button
+            whileHover={{ scale: 1.1 }}
+            type='button'
+            className='menuToggle'
+            onClick={() => setToggleNavbarOpen(!toggleNavbarOpen)}
+          >
+            <GiMountains></GiMountains>
+          </motion.button>
+          {/* =========TOGGLE_BUTTON====== */}
+
+          <div className='links-container'>
+            <AnimatePresence>
+              {toggleNavbarOpen &&
+                links.map((link) => {
+                  return (
+                    <motion.div
+                      key={link.id}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.45 }}
+                    >
+                      <button
+                        onClick={() => {
+                          setToggleNavbarOpen(false);
+                          navigate(link.path);
+                        }}
+                        type='button'
+                        className='link'
+                        // style={{link.id === 5 && {translateY: "10px", translateX: "10px"}} }
+                      >
+                        <>{link.icon}</>
+                      </button>
+                    </motion.div>
+                  );
+                })}
+            </AnimatePresence>
+          </div>
+
+          {/* ================================================================ */}
+
+          {/* ================================================================ */}
+        </div>
+      </Wrapper>
+    </>
   );
 }
 
-export default NavigationBar;
+export default NavigationBar2;
 
-const Wrapper = styled.nav`
-  /* z-index: 1000; */
+const Wrapper = styled.div`
   position: absolute;
+  left: 0.95rem;
+  top: 1.2rem;
+  z-index: 10;
 
-  .link-container {
-    margin-bottom: 8px;
+  .navbar-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: black;
+    font-size: 3.2rem;
+  }
+
+  .menuToggle {
+    height: 3.2rem;
+    margin-bottom: 7px;
+    font-weight: 900;
+    &:hover {
+      color: #46bcec;
+      transition: all 0.3s ease-out;
+    }
   }
 
   .link {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 3.5rem;
-    height: 3.5rem;
+    width: 3rem;
+    height: 3rem;
     border-radius: 50%;
     background: #c0c0c0;
-    position: relative;
-    left: 20px;
-    top: 85px;
     margin-bottom: 7px;
 
     &:hover {
