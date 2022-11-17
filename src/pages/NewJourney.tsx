@@ -147,6 +147,7 @@ const Wrapper = styled.div`
   .map-container {
     height: 100vh;
     width: 60vw;
+    background-color: rgba(0, 0, 0, 0.5);
   }
 
   .attraction-section {

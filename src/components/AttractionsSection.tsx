@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import AttractionNameSection from './AttractionNameSection';
+import IdentitySection from './IdentitySection';
 import SmallNavigationBar from './SmallNavigationBar';
 import AttractionCarousel from './UI/AttractionCarousel';
 import SearchBar from './UI/SearchBar';
@@ -8,10 +9,11 @@ import SearchBar from './UI/SearchBar';
 function AttractionsSection() {
   return (
     <Wrapper>
-      <SearchBar />
+      {/* <SearchBar />
       <AttractionNameSection />
       <SmallNavigationBar />
-      <AttractionCarousel />
+      <AttractionCarousel /> */}
+      <IdentitySection />
     </Wrapper>
   );
 }
@@ -19,9 +21,9 @@ function AttractionsSection() {
 export default AttractionsSection;
 
 const Wrapper = styled.div`
-  background-color: #000;
+  background-color: rgba(0, 0, 0, 0.5);
   color: #fff;
-  opacity: 0.5;
+
   height: 100%;
   width: 550px;
   margin-left: 3rem;
