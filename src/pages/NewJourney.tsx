@@ -13,6 +13,7 @@ import imgHorizontal from '../assets/mntn_horizontal.jpg';
 import ZoomButton from '../components/UI/ZoomButton';
 import { motion } from 'framer-motion';
 import AttractionsSection from '../components/AttractionsSection';
+import { TbMapPin } from 'react-icons/tb';
 
 function NewJourney() {
   // useEffect(() => {
@@ -32,8 +33,9 @@ function NewJourney() {
   // });
 
   const {
-    newJourney: { coordinates, bounds, zoom },
+    newJourney: { coordinates, bounds, zoom, attractions },
   } = useAppSelector((state) => state);
+  console.log(attractions?.map((attraction) => attraction?.latitude));
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition((coords: GeolocationPosition) => {
@@ -59,7 +61,7 @@ function NewJourney() {
   //         );
   //       }
   //     );
-  //   }, 5000);
+  //   }, 3000);
   //   return () => clearTimeout(timer);
   // }, []);
 
@@ -69,13 +71,15 @@ function NewJourney() {
       sw: { lat: bounds.sw.lat, lng: bounds.sw.lng },
     };
 
+    console.log('1');
     coordinates?.lat === 0 &&
       coordinates?.lng === 0 &&
       console.log('NOTfetching');
     // attraction fetching================================
-    // coordinates?.lat !== 0 &&
-    //   coordinates?.lng !== 0 &&
-    //   dispatch(getAttractionsData(boundsObject));
+    coordinates?.lat !== 0 &&
+      coordinates?.lng !== 0 &&
+      dispatch(getAttractionsData(boundsObject));
+    console.log('2');
   }, [coordinates, bounds]);
 
   interface test {
@@ -118,13 +122,24 @@ function NewJourney() {
           margin={[50, 50, 50, 50]}
           options={options}
           onChange={(e) => {
-            console.log(e);
             dispatch(setCoordinates({ lat: e.center.lat, lng: e.center.lng }));
             dispatch(
               setBounds({ ne: e.marginBounds.ne, sw: e.marginBounds.sw })
             );
           }}
-        ></GoogleMapReact>
+        >
+          {attractions?.map((attraction) => (
+            <div
+              className='mapPin-container'
+              key={Number(attraction.location_id)}
+              lng={Number(attraction.longitude)}
+              lat={Number(attraction.latitude)}
+            >
+              <TbMapPin></TbMapPin>
+            </div>
+          ))}
+          {/* TbMapPin */}
+        </GoogleMapReact>
       </motion.div>
       {/* ================================================ */}
       <motion.div

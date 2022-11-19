@@ -9,7 +9,7 @@ let apiURL: string =
 
 interface AttractionsResponse {
   [key: string]: object | object[];
-  data: object[];
+  data: Attraction[];
 }
 
 interface Bounds {
@@ -37,7 +37,7 @@ export const getAttractionsData = createAsyncThunk(
         },
         headers: {
           'X-RapidAPI-Key':
-            '83977db5eamshb16c568adbe75abp16ab34jsn4f1c341cc44d',
+            'eea6d1a117mshf011edc3498a027p11c9b4jsn39592a128e00',
           'X-RapidAPI-Host': 'travel-advisor.p.rapidapi.com',
         },
       });
@@ -49,8 +49,15 @@ export const getAttractionsData = createAsyncThunk(
   }
 );
 
+interface Attraction {
+  [key: string]: any;
+  latitude: string;
+  longitude: string;
+  location_id: string;
+}
+
 interface AttractionsState {
-  attractions: object[] | undefined;
+  attractions: Attraction[] | undefined;
   loading: 'idle' | 'true' | 'false' | 'failed';
   coordinates: GoogleMapReact.Coords | undefined;
   zoom: number;
@@ -62,7 +69,7 @@ interface AttractionsState {
 
 const initialState: AttractionsState = {
   loading: 'idle',
-  attractions: [],
+  attractions: undefined,
   coordinates: { lat: 0, lng: 0 },
   zoom: 12,
   bounds: {
