@@ -43,6 +43,7 @@ const Wrapper = styled.div`
     font-family: 'Montserrat', sans-serif;
 
     .centralPiece {
+      /* backdrop-filter: blur(1px); */
       margin-bottom: 10rem;
       display: flex;
       flex-direction: column;

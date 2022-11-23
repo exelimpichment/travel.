@@ -7,6 +7,8 @@ import {
   BsFillArrowLeftCircleFill,
 } from 'react-icons/bs';
 import { motion, AnimatePresence } from 'framer-motion';
+import SmallNavigationBar from '../SmallNavigationBar';
+import AttractionDescription from '../AttractionDescription';
 
 function AttractionCarousel() {
   const ScrollCarouselY = useRef<null | HTMLDivElement>(null);
@@ -21,6 +23,17 @@ function AttractionCarousel() {
 
   return (
     <Wrapper>
+      <div className='small-menu-container'>
+        <div className='buttons-container'>
+          <button type='button' className='btn' onClick={() => scroll(-250)}>
+            <BsFillArrowLeftCircleFill />
+          </button>
+          <button type='button' className='btn' onClick={() => scroll(250)}>
+            <BsFillArrowRightCircleFill />
+          </button>
+        </div>
+        <SmallNavigationBar />
+      </div>
       {/* ================================================================ */}
       <div className='carousel' ref={ScrollCarouselY}>
         <div className='photo-container'>
@@ -71,17 +84,9 @@ function AttractionCarousel() {
           />
         </div> */}
       </div>
-      {/* ================================================================ */}
 
-      <div className='buttons-container'>
-        <button type='button' className='btn' onClick={() => scroll(-250)}>
-          <BsFillArrowLeftCircleFill />
-        </button>
-        <button type='button' className='btn' onClick={() => scroll(250)}>
-          <BsFillArrowRightCircleFill />
-        </button>
-      </div>
-      {/* </div> */}
+      <AttractionDescription />
+      {/* ================================================================ */}
     </Wrapper>
   );
 }
@@ -92,8 +97,11 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
+  justify-content: start;
+  margin-bottom: 10%;
 
   .carousel {
+    height: 310px;
     scroll-behavior: smooth;
     display: flex;
     flex-direction: row;
@@ -111,11 +119,20 @@ const Wrapper = styled.div`
 
     .photo-container {
       position: relative;
-      min-width: 200px;
+      min-width: 210px;
       min-height: 200px;
       width: 200px;
       height: 300px;
-      padding: 0 8px 0 8px;
+      padding: 0 12px 0 0px;
+      cursor: pointer;
+
+      &:hover {
+        min-width: 210px;
+        min-height: 210px;
+        width: 210px;
+        height: 310px;
+        transition: all 0.3s ease-in-out;
+      }
 
       img {
         border-radius: 1.5rem;
@@ -126,25 +143,34 @@ const Wrapper = styled.div`
 
       .img-text {
         position: absolute;
-        bottom: 0;
+        bottom: 10%;
+        left: 10px;
         z-index: 9999;
+        font-family: var(--mainFont);
       }
     }
   }
 
-  .buttons-container {
-    font-size: 1.9rem;
-    color: rgba(242, 242, 243, 255);
-    padding-top: 0.5rem;
+  .small-menu-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 15px;
 
-    .btn {
-      height: 2.2rem;
-      padding: 0 5px 0 5px;
+    .buttons-container {
+      font-size: 1.9rem;
+      color: rgba(242, 242, 243, 255);
+      padding-top: 0.5rem;
 
-      svg {
-        &:hover {
-          color: #46bcec;
-          transition: all 0.3s ease-in-out;
+      .btn {
+        height: 2.2rem;
+        padding: 0 5px 0 0;
+
+        svg {
+          &:hover {
+            color: #46bcec;
+            transition: all 0.3s ease-in-out;
+          }
         }
       }
     }

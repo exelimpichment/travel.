@@ -5,13 +5,13 @@ interface ISmallLink {
   text: string;
 }
 
-const smallLinks: ISmallLink[] = [
+export const smallLinks: ISmallLink[] = [
   {
     id: 1,
     text: 'All places',
   },
   {
     id: 2,
-    text: 'Selected',
+    text: 'Bookmarks',
   },
 ];

@@ -1,5 +1,6 @@
 import React, { Component, useRef } from 'react';
 import styled from 'styled-components';
+import AttractionDescription from './AttractionDescription';
 import AttractionNameSection from './AttractionNameSection';
 import IdentitySection from './IdentitySection';
 import SmallNavigationBar from './SmallNavigationBar';
@@ -11,9 +12,9 @@ function AttractionsSection() {
     <Wrapper>
       <SearchBar />
       <AttractionNameSection />
-      <SmallNavigationBar />
       <AttractionCarousel />
-      <IdentitySection />
+
+      {/* <IdentitySection /> */}
     </Wrapper>
   );
 }

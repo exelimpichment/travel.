@@ -20,15 +20,14 @@ function SearchBar() {
 export default SearchBar;
 
 const Wrapper = styled.div`
+  width: 80%;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  max-width: 80%;
-  /* margin: auto; */
 
   input {
-    width: 80%;
-    z-index: 100;
+    width: 85%;
+
     border: none;
     appearance: none;
     background-color: transparent;
@@ -37,15 +36,13 @@ const Wrapper = styled.div`
     padding: 5px;
     font-family: var(--secondaryFont);
     font-size: 1.5rem;
-    font-style: italic;
-    font-weight: 300;
+
     border-bottom: 1px solid #ffffff;
 
     &::placeholder {
       /* Chrome, Firefox, Opera, Safari 10.1+ */
       color: white;
       opacity: 1; /* Firefox */
-      /* z-index: 999; */
     }
   }
 
