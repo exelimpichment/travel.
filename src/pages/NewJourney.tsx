@@ -13,7 +13,16 @@ import imgHorizontal from '../assets/mntn_horizontal.jpg';
 import ZoomButton from '../components/UI/ZoomButton';
 import { motion } from 'framer-motion';
 import AttractionsSection from '../components/AttractionsSection';
-import { TbMapPin } from 'react-icons/tb';
+import {
+  GoogleMap,
+  // Marker,
+  MarkerF,
+  DirectionsRenderer,
+  Circle,
+  MarkerClusterer,
+} from '@react-google-maps/api';
+import Marker from '../components/Marker';
+import PropType from 'prop-types';
 
 function NewJourney() {
   // useEffect(() => {
@@ -35,7 +44,6 @@ function NewJourney() {
   const {
     newJourney: { coordinates, bounds, zoom, attractions },
   } = useAppSelector((state) => state);
-  console.log(attractions?.map((attraction) => attraction?.latitude));
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition((coords: GeolocationPosition) => {
@@ -91,9 +99,13 @@ function NewJourney() {
     styles: mapStyle,
     disableDefaultUI: true,
     zoomControl: false,
+    fullscreenControl: false,
   };
 
   let innerWidth = window.innerWidth;
+
+  let lat = 0;
+  let lng = 0;
 
   return (
     <Wrapper>
@@ -122,23 +134,32 @@ function NewJourney() {
           margin={[50, 50, 50, 50]}
           options={options}
           onChange={(e) => {
+            console.log(e);
             dispatch(setCoordinates({ lat: e.center.lat, lng: e.center.lng }));
             dispatch(
               setBounds({ ne: e.marginBounds.ne, sw: e.marginBounds.sw })
             );
           }}
         >
-          {attractions?.map((attraction) => (
-            <div
-              className='mapPin-container'
-              key={Number(attraction.location_id)}
-              lng={Number(attraction.longitude)}
-              lat={Number(attraction.latitude)}
-            >
-              <TbMapPin></TbMapPin>
-            </div>
-          ))}
-          {/* TbMapPin */}
+          {/* list will not be changed here, so I used i for keyProp */}
+          {attractions?.map(
+            (attraction, i) =>
+              attraction.latitude &&
+              attraction.longitude && (
+                // I spent two days looking for
+                //a solution (when I remove "any"
+                // type)  and I was not able to
+                // figure out how to solve this
+                <Marker
+                  attraction={attraction}
+                  key={i}
+                  lat={Number(attraction.latitude)}
+                  lng={Number(attraction.longitude)}
+                />
+              )
+          )}
+
+          {/* <Marker position={{ lat: lat, lng: lng }}></Marker> */}
         </GoogleMapReact>
       </motion.div>
       {/* ================================================ */}

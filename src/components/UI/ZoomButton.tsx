@@ -1,9 +1,5 @@
-import React from 'react';
 import styled from 'styled-components';
-import { AiFillMinusCircle } from 'react-icons/ai';
-import { AiFillPlusCircle } from 'react-icons/ai';
-import { ActionCreator } from '@reduxjs/toolkit';
-import { ActionCreatorWithPayload } from '@reduxjs/toolkit';
+import { AiFillMinusCircle, AiFillPlusCircle } from 'react-icons/ai';
 import { useAppSelector, useAppDispatch } from '../../hooks/reduxHooks';
 import { setZoom } from '../../../src/features/NewJourney/NewJourneySlice';
 

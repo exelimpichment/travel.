@@ -56,7 +56,7 @@ function HeroPage() {
 export default HeroPage;
 
 const Wrapper = styled.main`
-  position: relative;
+  /* position: relative; */
 
   .container {
     display: flex;

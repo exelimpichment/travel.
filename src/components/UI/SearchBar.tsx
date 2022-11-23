@@ -24,7 +24,7 @@ const Wrapper = styled.div`
   justify-content: space-between;
   align-items: center;
   max-width: 80%;
-  margin: auto;
+  /* margin: auto; */
 
   input {
     width: 80%;

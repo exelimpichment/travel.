@@ -49,11 +49,12 @@ export const getAttractionsData = createAsyncThunk(
   }
 );
 
-interface Attraction {
+export interface Attraction {
   [key: string]: any;
   latitude: string;
   longitude: string;
   location_id: string;
+  photo: object;
 }
 
 interface AttractionsState {
