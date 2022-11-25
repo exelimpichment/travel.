@@ -6,14 +6,25 @@ import {
   auth,
   facebookProvider,
 } from '../../firebase/firebaseConfig';
+import { useNavigate, Link } from 'react-router-dom';
 
-const handleSignIn = () => {
-  signInWithRedirect(auth, facebookProvider).catch((error) => {
-    console.log(error);
-  });
-};
+// const handleSignIn = () => {
+//   signInWithRedirect(auth, facebookProvider).catch((error) => {
+//     console.log(error);
+//   });
+//   navigate('new-journey/attractions');
+// };
 
 function FacebookLoginButton() {
+  const navigate = useNavigate();
+
+  const handleSignIn = () => {
+    signInWithRedirect(auth, facebookProvider).catch((error) => {
+      console.log(error);
+    });
+    // navigate('/new-journey/attractions');
+  };
+
   return (
     <Wrapper type='button' onClick={handleSignIn}>
       <div className='g-sign-in-button'>

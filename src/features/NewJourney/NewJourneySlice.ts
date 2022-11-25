@@ -52,7 +52,7 @@ export interface Attraction {
 
 interface AttractionsState {
   attractions: Attraction[] | undefined;
-  rightSectionState: 'attractionsSection' | 'Friends' | 'Bookmarks';
+  attractionSectionState: 'attractionsSection' | 'friends' | 'bookmarks';
   loading: 'idle' | 'true' | 'false' | 'failed';
   coordinates: GoogleMapReact.Coords | undefined;
   zoom: number;
@@ -64,7 +64,7 @@ interface AttractionsState {
 
 const initialState: AttractionsState = {
   attractions: undefined,
-  rightSectionState: 'attractionsSection',
+  attractionSectionState: 'attractionsSection',
   loading: 'idle',
   coordinates: { lat: 0, lng: 0 },
   zoom: 12,
@@ -95,6 +95,9 @@ export const newJourneySlice = createSlice({
         state.zoom += 1;
       }
     },
+    setAttractionSectionState: (state, action) => {
+      state.attractionSectionState = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(
@@ -119,7 +122,8 @@ export const newJourneySlice = createSlice({
   },
 });
 
-export const { setCoordinates, setBounds, setZoom } = newJourneySlice.actions;
+export const { setCoordinates, setBounds, setZoom, setAttractionSectionState } =
+  newJourneySlice.actions;
 
 export const selectCount = (state: RootState) => state.newJourney.attractions;
 

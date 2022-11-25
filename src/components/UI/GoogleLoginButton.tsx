@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-
+import { useNavigate, Link } from 'react-router-dom';
 import { BsGoogle } from 'react-icons/bs';
 import styled from 'styled-components';
 import {
@@ -9,13 +9,14 @@ import {
   signOut,
 } from '../../firebase/firebaseConfig';
 
-const handleSignIn = () => {
-  signInWithRedirect(auth, provider).catch((error) => {
-    console.log(error);
-  });
-};
-
 function GoogleLoginButton() {
+  const navigate = useNavigate();
+
+  const handleSignIn = () => {
+    signInWithRedirect(auth, provider);
+
+    // navigate('/new-journey/attractions');
+  };
   return (
     <Wrapper type='button' onClick={handleSignIn}>
       <div className='g-sign-in-button'>

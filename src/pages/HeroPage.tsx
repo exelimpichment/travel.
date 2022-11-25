@@ -2,13 +2,11 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import imgVertical from '../assets/mntn_vertical.jpg';
 import imgHorizontal from '../assets/mntn_horizontal.jpg';
-import { GiMountains } from 'react-icons/gi';
 import GoogleLoginButton from '../components/UI/GoogleLoginButton';
 import FacebookLoginButton from '../components/UI/FacebookLoginButton';
 import { AnimatePresence } from 'framer-motion';
 import { useAuthState, auth } from '../firebase/firebaseConfig';
 import { motion } from 'framer-motion';
-import { useSelector, useDispatch } from 'react-redux';
 import { useAppDispatch } from '../hooks/reduxHooks';
 
 function HeroPage() {
@@ -23,6 +21,7 @@ function HeroPage() {
     <Wrapper>
       <div className='container'>
         <motion.div
+          key='centrePiece'
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           className='centrePiece'
@@ -39,6 +38,7 @@ function HeroPage() {
         </motion.div>
 
         <motion.div
+          key='buttons'
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           className='centrePiece'

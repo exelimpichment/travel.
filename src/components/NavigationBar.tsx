@@ -2,14 +2,14 @@ import React, { useState } from 'react';
 import links from '../utilities/links';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
-
+import { useAppSelector, useAppDispatch } from '../hooks/reduxHooks';
 import { handleSignOut } from '../firebase/firebaseConfig';
 import { useNavigate, Link } from 'react-router-dom';
 import { GiMountains } from 'react-icons/gi';
 
 function NavigationBar2() {
   const [toggleNavbarOpen, setToggleNavbarOpen] = useState(false);
-
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   return (
     <>
@@ -26,6 +26,7 @@ function NavigationBar2() {
         <div className='navbar-container'>
           {/* =========TOGGLE_BUTTON====== */}
           <motion.button
+            key='navBar'
             whileHover={{ scale: 1.1 }}
             type='button'
             className='menuToggle'

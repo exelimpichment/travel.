@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 function Friends() {
-  return <Wrapper>Friends</Wrapper>;
+  return <Wrapper> Friends</Wrapper>;
 }
 
 export default Friends;

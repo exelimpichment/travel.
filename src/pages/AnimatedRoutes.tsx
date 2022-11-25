@@ -17,13 +17,14 @@ function AnimatedRoutes() {
   console.log(location.pathname);
   console.log(location.pathname.split('/')[1]);
   return (
-    <AnimatePresence>
+    <AnimatePresence mode={'wait'}>
+      {/* <AnimatePresence initial={false} mode={'wait'}> */}
       <Routes location={location} key={location.pathname}>
         <Route path='/' element={<HeroPage />} />
         <Route path='new-journey' element={<NewJourney />}>
-          {/* <Route path='attractions' element={<AttractionsSection />} /> */}
-          {/* <Route path='friends' element={<Friends />} /> */}
-          {/* <Route path='bookmarks' element={<Bookmarks />} /> */}
+          <Route path='attractions' element={<AttractionsSection />} />
+          <Route path='friends' element={<Friends />} />
+          <Route path='bookmarks' element={<Bookmarks />} />
         </Route>
         <Route path='/music-player' element={<MusicPlayer />} />
         <Route path='*' element={<Error />} />

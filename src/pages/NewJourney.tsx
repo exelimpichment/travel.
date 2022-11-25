@@ -14,10 +14,7 @@ import ZoomButton from '../components/UI/ZoomButton';
 import { motion } from 'framer-motion';
 import AttractionsSection from '../components/AttractionsSection';
 import Marker from '../components/Marker';
-
 import { Outlet, Link } from 'react-router-dom';
-import Friends from './Friends';
-import Bookmarks from './Bookmarks';
 
 function NewJourney() {
   // useEffect(() => {
@@ -103,11 +100,12 @@ function NewJourney() {
     <Wrapper>
       {/* ================================================ */}
       <motion.div
+        key='map'
         initial={{ x: -innerWidth * 0.6 }}
         // 0 - innerWidth of map div
         animate={{ x: 0 }}
         exit={{ x: -innerWidth * 0.6 }}
-        transition={{ duration: 1, delay: 0.3 }}
+        transition={{ duration: 1 }}
         className='map-container'
         // ref={mapRef}
         style={{
@@ -154,15 +152,14 @@ function NewJourney() {
       </motion.div>
       {/* ================================================ */}
       <motion.div
+        key='outlet'
         initial={{ x: innerWidth + 1000 }}
         //  innerWidth of window + with of div
         animate={{ x: 0 }}
         exit={{ x: innerWidth + 1000 }}
-        transition={{ duration: 1, delay: 0.3 }}
+        transition={{ duration: 1 }}
       >
-        <AttractionsSection />
-        {/* <Friends /> */}
-        {/* <Bookmarks /> */}
+        <Outlet />
       </motion.div>
     </Wrapper>
   );

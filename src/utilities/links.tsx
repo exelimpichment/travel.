@@ -10,14 +10,13 @@ interface ILink {
   text: string;
   path: string;
   icon: JSX.Element;
-  // payload?:
 }
 
 const links: ILink[] = [
   {
     id: 1,
     text: 'NewJourney',
-    path: 'new-journey',
+    path: 'new-journey/attractions',
     icon: <BiTrip />,
   },
   {
