@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
 
 import { handleSignOut } from '../firebase/firebaseConfig';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { GiMountains } from 'react-icons/gi';
 
 function NavigationBar2() {
@@ -54,7 +54,6 @@ function NavigationBar2() {
                         }}
                         type='button'
                         className='link'
-                        // style={{link.id === 5 && {translateY: "10px", translateX: "10px"}} }
                       >
                         <>{link.icon}</>
                       </button>

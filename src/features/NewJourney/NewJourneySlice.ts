@@ -21,13 +21,6 @@ export const getAttractionsData = createAsyncThunk(
   'newJourney/getAttractionsData',
   async (position: Bounds, thunkAPI) => {
     try {
-      console.log(
-        position.ne.lng,
-        position.ne.lat,
-        position.sw.lng,
-        position.sw.lat
-      );
-
       const response = await axios.get<AttractionsResponse>(apiURL, {
         params: {
           tr_longitude: position.ne.lng,
@@ -59,6 +52,7 @@ export interface Attraction {
 
 interface AttractionsState {
   attractions: Attraction[] | undefined;
+  rightSectionState: 'attractionsSection' | 'Friends' | 'Bookmarks';
   loading: 'idle' | 'true' | 'false' | 'failed';
   coordinates: GoogleMapReact.Coords | undefined;
   zoom: number;
@@ -69,8 +63,9 @@ interface AttractionsState {
 }
 
 const initialState: AttractionsState = {
-  loading: 'idle',
   attractions: undefined,
+  rightSectionState: 'attractionsSection',
+  loading: 'idle',
   coordinates: { lat: 0, lng: 0 },
   zoom: 12,
   bounds: {

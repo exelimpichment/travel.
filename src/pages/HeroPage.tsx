@@ -27,7 +27,7 @@ function HeroPage() {
           animate={{ opacity: 1 }}
           className='centrePiece'
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.3 }}
         >
           <div>
             <div className='text-container'>
@@ -43,7 +43,7 @@ function HeroPage() {
           animate={{ opacity: 1 }}
           className='centrePiece'
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.3 }}
         >
           <GoogleLoginButton />
           <FacebookLoginButton />

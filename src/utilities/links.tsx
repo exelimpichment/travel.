@@ -10,25 +10,26 @@ interface ILink {
   text: string;
   path: string;
   icon: JSX.Element;
+  // payload?:
 }
 
 const links: ILink[] = [
   {
     id: 1,
     text: 'NewJourney',
-    path: '/new-journey',
+    path: 'new-journey',
     icon: <BiTrip />,
   },
   {
     id: 2,
     text: 'Friends',
-    path: '/friends',
+    path: 'new-journey/friends',
     icon: <GrGroup />,
   },
   {
     id: 3,
     text: 'Bookmarks',
-    path: '/bookmarks',
+    path: 'new-journey/bookmarks',
     icon: <BsFillBookmarkHeartFill />,
   },
 

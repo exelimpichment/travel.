@@ -1,3 +1,4 @@
+import AttractionsSection from '../components/AttractionsSection';
 import NavigationBar from '../components/NavigationBar';
 import AnimatedRoutes from './AnimatedRoutes';
 import Bookmarks from './Bookmarks';
@@ -16,4 +17,5 @@ export {
   MusicPlayer,
   NewJourney,
   AnimatedRoutes,
+  AttractionsSection,
 };

@@ -13,16 +13,11 @@ import imgHorizontal from '../assets/mntn_horizontal.jpg';
 import ZoomButton from '../components/UI/ZoomButton';
 import { motion } from 'framer-motion';
 import AttractionsSection from '../components/AttractionsSection';
-import {
-  GoogleMap,
-  // Marker,
-  MarkerF,
-  DirectionsRenderer,
-  Circle,
-  MarkerClusterer,
-} from '@react-google-maps/api';
 import Marker from '../components/Marker';
-import PropType from 'prop-types';
+
+import { Outlet, Link } from 'react-router-dom';
+import Friends from './Friends';
+import Bookmarks from './Bookmarks';
 
 function NewJourney() {
   // useEffect(() => {
@@ -79,15 +74,12 @@ function NewJourney() {
       sw: { lat: bounds.sw.lat, lng: bounds.sw.lng },
     };
 
-    console.log('1');
     coordinates?.lat === 0 &&
       coordinates?.lng === 0 &&
-      console.log('NOTfetching');
-    // attraction fetching================================
-    coordinates?.lat !== 0 &&
+      // attraction fetching================================
+      coordinates?.lat !== 0 &&
       coordinates?.lng !== 0 &&
       dispatch(getAttractionsData(boundsObject));
-    console.log('2');
   }, [coordinates, bounds]);
 
   interface test {
@@ -116,7 +108,6 @@ function NewJourney() {
         animate={{ x: 0 }}
         exit={{ x: -innerWidth * 0.6 }}
         transition={{ duration: 1, delay: 0.3 }}
-        // ==============
         className='map-container'
         // ref={mapRef}
         style={{
@@ -134,7 +125,6 @@ function NewJourney() {
           margin={[50, 50, 50, 50]}
           options={options}
           onChange={(e) => {
-            console.log(e);
             dispatch(setCoordinates({ lat: e.center.lat, lng: e.center.lng }));
             dispatch(
               setBounds({ ne: e.marginBounds.ne, sw: e.marginBounds.sw })
@@ -171,6 +161,8 @@ function NewJourney() {
         transition={{ duration: 1, delay: 0.3 }}
       >
         <AttractionsSection />
+        {/* <Friends /> */}
+        {/* <Bookmarks /> */}
       </motion.div>
     </Wrapper>
   );
