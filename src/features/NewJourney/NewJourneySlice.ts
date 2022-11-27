@@ -3,6 +3,7 @@ import type { PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from '../../app/store';
 import axios from 'axios';
 import GoogleMapReact from '../../../node_modules/@types/google-map-react/index';
+import { tempAttractions } from './tempAttractions';
 
 let apiURL: string =
   'https://travel-advisor.p.rapidapi.com/attractions/list-in-boundary';
@@ -30,7 +31,7 @@ export const getAttractionsData = createAsyncThunk(
         },
         headers: {
           'X-RapidAPI-Key':
-            'eea6d1a117mshf011edc3498a027p11c9b4jsn39592a128e00',
+            'ee7d318de7msh8542f14947f21a0p156d1ajsn77a26d909433',
           'X-RapidAPI-Host': 'travel-advisor.p.rapidapi.com',
         },
       });
@@ -47,12 +48,30 @@ export interface Attraction {
   latitude: string;
   longitude: string;
   location_id: string;
-  photo: object;
+  photo: {
+    images: {
+      large: {
+        url: string;
+      };
+      medium: {
+        url: string;
+      };
+      original: {
+        url: string;
+      };
+      small: {
+        url: string;
+      };
+      thumbnail: {
+        url: string;
+      };
+    };
+  };
 }
 
 interface AttractionsState {
+  childClicked: number | null;
   attractions: Attraction[] | undefined;
-  attractionSectionState: 'attractionsSection' | 'friends' | 'bookmarks';
   loading: 'idle' | 'true' | 'false' | 'failed';
   coordinates: GoogleMapReact.Coords | undefined;
   zoom: number;
@@ -63,8 +82,9 @@ interface AttractionsState {
 }
 
 const initialState: AttractionsState = {
-  attractions: undefined,
-  attractionSectionState: 'attractionsSection',
+  childClicked: null,
+  // attractions: undefined,
+  attractions: tempAttractions,
   loading: 'idle',
   coordinates: { lat: 0, lng: 0 },
   zoom: 12,
@@ -81,6 +101,9 @@ export const newJourneySlice = createSlice({
   name: 'newJourney',
   initialState,
   reducers: {
+    setChildClicked: (state, action) => {
+      state.childClicked = action.payload;
+    },
     setCoordinates: (state, action) => {
       state.coordinates = action.payload;
     },
@@ -94,9 +117,6 @@ export const newJourneySlice = createSlice({
       if (action.payload === 'increment' && state.zoom < 22) {
         state.zoom += 1;
       }
-    },
-    setAttractionSectionState: (state, action) => {
-      state.attractionSectionState = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -115,14 +135,16 @@ export const newJourneySlice = createSlice({
       ) => {
         state.loading = 'false';
         state.attractions = action.payload?.data;
+        console.log(action.payload?.data);
+
         // here may be a mistake, guys ... sorry... this TS is tough!  soon you will
-        //  hire me and my code will be reviewed. so I can become a better faster. :)
+        //  hire me and my code will be reviewed. so I can become better faster. :)
       }
     );
   },
 });
 
-export const { setCoordinates, setBounds, setZoom, setAttractionSectionState } =
+export const { setCoordinates, setBounds, setZoom, setChildClicked } =
   newJourneySlice.actions;
 
 export const selectCount = (state: RootState) => state.newJourney.attractions;

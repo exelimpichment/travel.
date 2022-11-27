@@ -14,7 +14,7 @@ function Marker(props: any) {
 
   return (
     <Wrapper>
-      <div className='pin-container' onClick={() => console.log('click')}>
+      <div className='pin-container'>
         {/* {attraction?.photo?.images?.medium?.url ? } */}
 
         <img
@@ -29,13 +29,16 @@ function Marker(props: any) {
 export default Marker;
 
 const Wrapper = styled.div`
-  &:hover {
-    z-index: 555555 !important;
-  }
+  height: 60px;
+  width: 60px;
+  /* background-color: red; */
+
   .pin-container {
-    z-index: 998;
     font-size: 2rem;
+
     img {
+      transform: translate(-50%, -50%);
+      position: absolute;
       height: 60px;
       width: 60px;
       border-radius: 50%;
@@ -46,13 +49,9 @@ const Wrapper = styled.div`
         height: 70px;
         width: 70px;
         transition: all 0.3s ease-out;
-
         border: 2px solid #46bcec;
+        z-index: 2;
       }
-    }
-
-    &:hover {
-      z-index: 555555 !important;
     }
   }
 `;

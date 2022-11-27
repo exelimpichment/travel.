@@ -1,6 +1,10 @@
 import styled from 'styled-components';
+import { useAppSelector } from '../hooks/reduxHooks';
 
 function AttractionDescription() {
+  const {
+    newJourney: { attractions },
+  } = useAppSelector((state) => state);
   return (
     <Wrapper>
       <p>

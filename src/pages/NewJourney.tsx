@@ -7,6 +7,7 @@ import {
   setCoordinates,
   setBounds,
   setZoom,
+  setChildClicked,
 } from '../features/NewJourney/NewJourneySlice';
 import mapStyle from '../components/UI/mapStyles';
 import imgHorizontal from '../assets/mntn_horizontal.jpg';
@@ -17,21 +18,10 @@ import Marker from '../components/Marker';
 import { Outlet, Link } from 'react-router-dom';
 
 function NewJourney() {
-  // useEffect(() => {
-  //   // Google Analytics
-  //   console.log(location);
-  // }, [location]);
   const [width, setWidth] = useState(0);
+
   const mapRef = useRef<HTMLInputElement>(null);
   const dispatch = useAppDispatch();
-
-  // dangerous piece of code. hope i got it right
-  // useLayoutEffect(() => {
-  //   if (mapRef.current != null) {
-  //     setWidth(mapRef.current.offsetWidth);
-  //   }
-  //   console.log(width);
-  // });
 
   const {
     newJourney: { coordinates, bounds, zoom, attractions },
@@ -65,19 +55,23 @@ function NewJourney() {
   //   return () => clearTimeout(timer);
   // }, []);
 
-  useEffect(() => {
-    let boundsObject = {
-      ne: { lat: bounds.ne.lat, lng: bounds.ne.lng },
-      sw: { lat: bounds.sw.lat, lng: bounds.sw.lng },
-    };
+  // useEffect(() => {
+  // let boundsObject = {
+  // ne: { lat: bounds.ne.lat, lng: bounds.ne.lng },
+  // sw: { lat: bounds.sw.lat, lng: bounds.sw.lng },
+  // };
 
-    coordinates?.lat === 0 &&
-      coordinates?.lng === 0 &&
-      // attraction fetching================================
-      coordinates?.lat !== 0 &&
-      coordinates?.lng !== 0 &&
-      dispatch(getAttractionsData(boundsObject));
-  }, [coordinates, bounds]);
+  // coordinates?.lat === 0 &&
+  //   coordinates?.lng === 0 &&
+  // attraction fetching================================
+  // console.log('1');
+
+  // coordinates?.lat !== 0 &&
+  //   coordinates?.lng !== 0 &&
+  //   dispatch(getAttractionsData(boundsObject));
+  // console.log('2');
+  // }, [bounds]);
+  // }, [coordinates, bounds]);
 
   interface test {
     x: number;
@@ -107,7 +101,6 @@ function NewJourney() {
         exit={{ x: -innerWidth * 0.6 }}
         transition={{ duration: 1 }}
         className='map-container'
-        // ref={mapRef}
         style={{
           borderRadius: '0 3rem 3rem 0',
           overflow: 'hidden',
@@ -122,6 +115,7 @@ function NewJourney() {
           zoom={zoom}
           margin={[50, 50, 50, 50]}
           options={options}
+          onChildClick={(child) => dispatch(setChildClicked(child))}
           onChange={(e) => {
             dispatch(setCoordinates({ lat: e.center.lat, lng: e.center.lng }));
             dispatch(
@@ -139,6 +133,7 @@ function NewJourney() {
                 // type)  and I was not able to
                 // figure out how to solve this
                 <Marker
+                  style={{ zIndex: 1 }}
                   attraction={attraction}
                   key={i}
                   lat={Number(attraction.latitude)}

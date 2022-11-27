@@ -17,6 +17,7 @@ function AnimatedRoutes() {
   console.log(location.pathname);
   console.log(location.pathname.split('/')[1]);
   return (
+    // <AnimatePresence>
     <AnimatePresence mode={'wait'}>
       {/* <AnimatePresence initial={false} mode={'wait'}> */}
       <Routes location={location} key={location.pathname}>

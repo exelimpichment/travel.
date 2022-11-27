@@ -13,8 +13,6 @@ function AttractionsSection() {
       <SearchBar />
       <AttractionNameSection />
       <AttractionCarousel />
-
-      {/* <IdentitySection /> */}
     </Wrapper>
   );
 }
