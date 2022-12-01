@@ -1,16 +1,23 @@
 import React from 'react';
 import styled from 'styled-components';
+import { setCarouselView } from '../features/NewJourney/NewJourneySlice';
+import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks';
 import { smallLinks } from '../utilities/smallLinks';
 
 function SmallNavigationBar() {
+  const {
+    newJourney: { allPlacesShown },
+  } = useAppSelector((state) => state);
+  const dispatch = useAppDispatch();
   return (
     <Wrapper>
       {smallLinks.map((link) => (
         <button
+          // disabled={link.disabled}
           key={link.id}
           type='button'
           className='button'
-          onClick={() => console.log(link.text)}
+          onClick={() => dispatch(setCarouselView())}
         >
           {link.text}
         </button>

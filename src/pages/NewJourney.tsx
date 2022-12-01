@@ -183,7 +183,7 @@ const Wrapper = styled.div`
     background-size: cover;
     background-attachment: fixed;
 
-    color: red;
+    /* color: red; */
     overflow: hidden;
     height: 100vh;
 

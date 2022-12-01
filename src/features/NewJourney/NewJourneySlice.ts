@@ -76,10 +76,17 @@ export interface User {
   uid: string;
 }
 
+export interface DocIdObject {
+  location_id: string;
+  docID: string;
+}
+
 interface AttractionsState {
+  allPlacesShown: boolean;
   currentUser: User | null;
   childClicked: number | null;
-  locationsId: null | string[];
+  docIdObject: null | DocIdObject[];
+  locationIdArr: null | string[];
   attractions: Attraction[] | undefined;
   loading: 'idle' | 'true' | 'false' | 'failed';
   coordinates: GoogleMapReact.Coords | undefined;
@@ -91,10 +98,12 @@ interface AttractionsState {
 }
 
 const initialState: AttractionsState = {
+  allPlacesShown: true,
   currentUser: null,
   childClicked: null,
   // attractions: undefined,
-  locationsId: null,
+  docIdObject: null,
+  locationIdArr: null,
   attractions: tempAttractions,
   loading: 'idle',
   coordinates: { lat: 0, lng: 0 },
@@ -112,8 +121,14 @@ export const newJourneySlice = createSlice({
   name: 'newJourney',
   initialState,
   reducers: {
-    setLocationsId: (state, action) => {
-      state.locationsId = action.payload;
+    setCarouselView: (state) => {
+      state.allPlacesShown = !state.allPlacesShown;
+    },
+    setLocationIdArr: (state, action) => {
+      state.locationIdArr = action.payload;
+    },
+    setDocIdObject: (state, action) => {
+      state.docIdObject = action.payload;
     },
     setCurrentUser: (state, action) => {
       state.currentUser = action.payload;
@@ -167,7 +182,9 @@ export const {
   setZoom,
   setChildClicked,
   setCurrentUser,
-  setLocationsId,
+  setDocIdObject,
+  setLocationIdArr,
+  setCarouselView,
 } = newJourneySlice.actions;
 
 export const selectCount = (state: RootState) => state.newJourney.attractions;

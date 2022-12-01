@@ -20,10 +20,14 @@ import {
   query,
   where,
   orderBy,
+  deleteDoc,
 } from 'firebase/firestore';
 import { db } from '../../firebase/firebaseConfig';
 import { object } from 'prop-types';
-import { setLocationsId } from '../../features/NewJourney/NewJourneySlice';
+import {
+  setDocIdObject,
+  setLocationIdArr,
+} from '../../features/NewJourney/NewJourneySlice';
 
 function AttractionCarousel() {
   const dispatch = useAppDispatch();
@@ -35,16 +39,22 @@ function AttractionCarousel() {
   };
 
   const {
-    newJourney: { attractions, currentUser, locationsId },
+    newJourney: { attractions, currentUser, locationIdArr, docIdObject },
   } = useAppSelector((state) => state);
 
-  const addToBookmarks = async (bookmark: Bookmark) => {
+  const addBookmarks = async (bookmark: Bookmark) => {
     console.log('sent to FB');
     const docRef = await addDoc(
       collection(db, 'users', `${bookmark.uid}`, 'bookmarks'),
       {
         ...bookmark,
       }
+    );
+  };
+
+  const deleteBookmarks = async (docId: string) => {
+    await deleteDoc(
+      doc(db, 'users', `${currentUser?.uid}`, 'bookmarks', `${docId}`)
     );
   };
 
@@ -62,15 +72,21 @@ function AttractionCarousel() {
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
       const bookmarks: object[] = [];
       querySnapshot.forEach((doc) => {
-        console.log(doc.data());
-        bookmarks.push(doc.data());
+        let docID = doc.id;
+        bookmarks.push({ ...doc.data(), docID });
       });
+
+      const docIdObject: object[] = [];
       const locationsId: string[] = [];
+
       bookmarks.forEach((bookmark: any) => {
-        locationsId.push(bookmark.location_id);
+        const { location_id, docID } = bookmark;
+        docIdObject.push({ location_id, docID });
+        locationsId.push(location_id);
       });
-      dispatch(setLocationsId(locationsId));
-      // console.log(bookmarks);
+
+      dispatch(setDocIdObject(docIdObject));
+      dispatch(setLocationIdArr(locationsId));
     });
   }, []);
 
@@ -100,23 +116,32 @@ function AttractionCarousel() {
                       console.log('no user. please offer to login');
                     }
                   : () => {
-                      addToBookmarks({
-                        location_id: attraction.location_id,
-                        photo: attraction.photo.images.original.url,
-                        latitude: attraction.latitude,
-                        longitude: attraction.longitude,
-                        displayName: currentUser?.displayName,
-                        email: currentUser?.email,
-                        photoURL: currentUser?.photoURL,
-                        uid: currentUser?.uid,
-                        createdAt: serverTimestamp(),
-                      });
+                      if (locationIdArr?.includes(attraction.location_id)) {
+                        docIdObject?.map((object) => {
+                          object.location_id === attraction.location_id
+                            ? deleteBookmarks(object.docID)
+                            : null;
+                        });
+                        console.log('deleted location');
+                      } else {
+                        addBookmarks({
+                          location_id: attraction.location_id,
+                          photo: attraction.photo.images.original.url,
+                          latitude: attraction.latitude,
+                          longitude: attraction.longitude,
+                          displayName: currentUser?.displayName,
+                          email: currentUser?.email,
+                          photoURL: currentUser?.photoURL,
+                          uid: currentUser?.uid,
+                          createdAt: serverTimestamp(),
+                        });
+                      }
                     }
               }
             >
               <BsBookmarkCheckFill
                 style={
-                  locationsId?.includes(attraction.location_id)
+                  locationIdArr?.includes(attraction.location_id)
                     ? { color: '#46bcec' }
                     : { color: 'rgba(0, 0, 0, 0.5)' }
                 }
