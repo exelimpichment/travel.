@@ -8,14 +8,60 @@ import { AnimatePresence } from 'framer-motion';
 import { useAuthState, auth } from '../firebase/firebaseConfig';
 import { motion } from 'framer-motion';
 import { useAppDispatch } from '../hooks/reduxHooks';
+import { setCurrentUser, User } from '../features/NewJourney/NewJourneySlice';
+import {
+  collectionGroup,
+  query,
+  doc,
+  setDoc,
+  getDocs,
+  where,
+} from 'firebase/firestore';
+
+import { db } from '../firebase/firebaseConfig';
 
 function HeroPage() {
+  const dispatch = useAppDispatch();
   const [user, loading, error] = useAuthState(auth);
-  console.log(user, loading, error);
+  console.log({ user }, { loading }, { error });
+
+  useEffect(() => {
+    if (user) {
+      const { displayName, email, photoURL, uid } = user;
+      dispatch(setCurrentUser({ displayName, email, photoURL, uid }));
+      const addUserToDb = async () => {
+        await setDoc(doc(db, 'users', `${uid}`), {
+          displayName,
+          email,
+          photoURL,
+          uid,
+        });
+      };
+      addUserToDb();
+    } else {
+      console.log('no user');
+    }
+  }, [user]);
+
+  // useEffect(() => {
+  //   console.log('1');
+
+  //   const getBookmarks = async () => {
+  //     console.log('2');
+  //     const testt = query(
+  //       collectionGroup(db, 'bookmarks'),
+  //       where('type', '==', 'test')
+  //     );
+  //     console.log('3');
+  //     const querySnapshot = await getDocs(testt);
+  //     console.log('4');
+  //     querySnapshot.forEach((doc) => console.log(doc.data()));
+  //   };
+  //   getBookmarks();
+  //   console.log('5');
+  // }, []);
 
   const [toggleNavbarOpen, setToggleNavbarOpen] = useState(false);
-
-  const dispatch = useAppDispatch();
 
   return (
     <Wrapper>

@@ -1,7 +1,7 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import tempUser from '../../assets/tempUser.jpg';
 import styled from 'styled-components';
-import { useAppSelector } from '../../hooks/reduxHooks';
+import { useAppSelector, useAppDispatch } from '../../hooks/reduxHooks';
 import {
   BsFillArrowRightCircleFill,
   BsFillArrowLeftCircleFill,
@@ -10,17 +10,69 @@ import { motion, AnimatePresence } from 'framer-motion';
 import SmallNavigationBar from '../SmallNavigationBar';
 import AttractionDescription from '../AttractionDescription';
 import { BsFillBookmarkFill, BsBookmarkCheckFill } from 'react-icons/bs';
+import { User, Attraction } from '../../features/NewJourney/NewJourneySlice';
+import {
+  collection,
+  addDoc,
+  serverTimestamp,
+  onSnapshot,
+  doc,
+  query,
+  where,
+  orderBy,
+} from 'firebase/firestore';
+import { db } from '../../firebase/firebaseConfig';
+import { object } from 'prop-types';
+import { setLocationsId } from '../../features/NewJourney/NewJourneySlice';
 
 function AttractionCarousel() {
-  const ScrollCarouselY = useRef<null | HTMLDivElement>(null);
+  const dispatch = useAppDispatch();
+  // const ScrollCarouselY = useRef<null | HTMLDanivElement>(null);
+  const ScrollCarouselY = useRef<null | any>(null);
 
   const scroll = (scrollOffset: number): void => {
     ScrollCarouselY.current.scrollLeft += scrollOffset;
   };
 
   const {
-    newJourney: { attractions },
+    newJourney: { attractions, currentUser, locationsId },
   } = useAppSelector((state) => state);
+
+  const addToBookmarks = async (bookmark: Bookmark) => {
+    console.log('sent to FB');
+    const docRef = await addDoc(
+      collection(db, 'users', `${bookmark.uid}`, 'bookmarks'),
+      {
+        ...bookmark,
+      }
+    );
+  };
+
+  interface Bookmark extends User {
+    location_id: string;
+    photo: string;
+    latitude: string;
+    longitude: string;
+    createdAt: any;
+  }
+
+  useEffect(() => {
+    const q = query(collection(db, `users/${currentUser?.uid}/bookmarks`));
+
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      const bookmarks: object[] = [];
+      querySnapshot.forEach((doc) => {
+        console.log(doc.data());
+        bookmarks.push(doc.data());
+      });
+      const locationsId: string[] = [];
+      bookmarks.forEach((bookmark: any) => {
+        locationsId.push(bookmark.location_id);
+      });
+      dispatch(setLocationsId(locationsId));
+      // console.log(bookmarks);
+    });
+  }, []);
 
   return (
     <Wrapper>
@@ -40,8 +92,35 @@ function AttractionCarousel() {
         {/* <div className='carousel'> */}
         {attractions?.map((attraction) => (
           <div className='photo-container' key={attraction.location_id}>
-            <button type='button'>
-              <BsBookmarkCheckFill />
+            <button
+              type='button'
+              onClick={
+                currentUser === null
+                  ? () => {
+                      console.log('no user. please offer to login');
+                    }
+                  : () => {
+                      addToBookmarks({
+                        location_id: attraction.location_id,
+                        photo: attraction.photo.images.original.url,
+                        latitude: attraction.latitude,
+                        longitude: attraction.longitude,
+                        displayName: currentUser?.displayName,
+                        email: currentUser?.email,
+                        photoURL: currentUser?.photoURL,
+                        uid: currentUser?.uid,
+                        createdAt: serverTimestamp(),
+                      });
+                    }
+              }
+            >
+              <BsBookmarkCheckFill
+                style={
+                  locationsId?.includes(attraction.location_id)
+                    ? { color: '#46bcec' }
+                    : { color: 'rgba(0, 0, 0, 0.5)' }
+                }
+              />
             </button>
             <img src={attraction.photo.images.original.url} alt='' />
           </div>
@@ -102,7 +181,7 @@ const Wrapper = styled.div`
         top: 0px;
         right: 15%;
         font-size: 2rem;
-        color: rgba(0, 0, 0, 0.5);
+        /* color: rgba(0, 0, 0, 0.5); */
         /* background-color: rgba(0, 0, 0, 0.5); */
 
         &:hover {
@@ -154,3 +233,5 @@ const Wrapper = styled.div`
     }
   }
 `;
+
+// ======

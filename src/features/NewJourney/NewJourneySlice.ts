@@ -69,8 +69,17 @@ export interface Attraction {
   };
 }
 
+export interface User {
+  displayName: string;
+  email: string;
+  photoURL: string;
+  uid: string;
+}
+
 interface AttractionsState {
+  currentUser: User | null;
   childClicked: number | null;
+  locationsId: null | string[];
   attractions: Attraction[] | undefined;
   loading: 'idle' | 'true' | 'false' | 'failed';
   coordinates: GoogleMapReact.Coords | undefined;
@@ -82,8 +91,10 @@ interface AttractionsState {
 }
 
 const initialState: AttractionsState = {
+  currentUser: null,
   childClicked: null,
   // attractions: undefined,
+  locationsId: null,
   attractions: tempAttractions,
   loading: 'idle',
   coordinates: { lat: 0, lng: 0 },
@@ -101,6 +112,12 @@ export const newJourneySlice = createSlice({
   name: 'newJourney',
   initialState,
   reducers: {
+    setLocationsId: (state, action) => {
+      state.locationsId = action.payload;
+    },
+    setCurrentUser: (state, action) => {
+      state.currentUser = action.payload;
+    },
     setChildClicked: (state, action) => {
       state.childClicked = action.payload;
     },
@@ -144,8 +161,14 @@ export const newJourneySlice = createSlice({
   },
 });
 
-export const { setCoordinates, setBounds, setZoom, setChildClicked } =
-  newJourneySlice.actions;
+export const {
+  setCoordinates,
+  setBounds,
+  setZoom,
+  setChildClicked,
+  setCurrentUser,
+  setLocationsId,
+} = newJourneySlice.actions;
 
 export const selectCount = (state: RootState) => state.newJourney.attractions;
 

@@ -6,6 +6,8 @@ import { useAppSelector, useAppDispatch } from '../hooks/reduxHooks';
 import { handleSignOut } from '../firebase/firebaseConfig';
 import { useNavigate, Link } from 'react-router-dom';
 import { GiMountains } from 'react-icons/gi';
+import { setCurrentUser } from '../features/NewJourney/NewJourneySlice';
+import { redirect } from 'react-router-dom';
 
 function NavigationBar2() {
   const [toggleNavbarOpen, setToggleNavbarOpen] = useState(false);
@@ -18,6 +20,7 @@ function NavigationBar2() {
         type='button'
         onClick={() => {
           handleSignOut();
+          // dispatch(setCurrentUser(null));
         }}
       >
         sign out
@@ -51,6 +54,7 @@ function NavigationBar2() {
                       <button
                         onClick={() => {
                           setToggleNavbarOpen(false);
+
                           navigate(link.path);
                         }}
                         type='button'
