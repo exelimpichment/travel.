@@ -39,7 +39,13 @@ function AttractionCarousel() {
   };
 
   const {
-    newJourney: { attractions, currentUser, locationIdArr, docIdObject },
+    newJourney: {
+      attractions,
+      currentUser,
+      locationIdArr,
+      docIdObject,
+      allPlacesShown,
+    },
   } = useAppSelector((state) => state);
 
   const addBookmarks = async (bookmark: Bookmark) => {
@@ -151,7 +157,6 @@ function AttractionCarousel() {
           </div>
         ))}
       </div>
-
       <AttractionDescription />
       {/* ================================================================ */}
     </Wrapper>
@@ -259,4 +264,84 @@ const Wrapper = styled.div`
   }
 `;
 
-// ======
+// ==============NOTE===========NOTE==========
+// tried to filter this carusel also but decided to leave it like it was.
+// ==============NOTE===========NOTE==========
+
+//   return (
+//     <Wrapper>
+//       <div className='small-menu-container'>
+//         <div className='buttons-container'>
+//           <button type='button' className='btn' onClick={() => scroll(-250)}>
+//             <BsFillArrowLeftCircleFill />
+//           </button>
+//           <button type='button' className='btn' onClick={() => scroll(250)}>
+//             <BsFillArrowRightCircleFill />
+//           </button>
+//         </div>
+//         <SmallNavigationBar />
+//       </div>
+//       {/* ================================================================ */}
+//       <div className='carousel' ref={ScrollCarouselY}>
+//         {/* <div className='carousel'> */}
+//         {attractions?.map((attraction) => (
+//           <AnimatePresence>
+//             {(!allPlacesShown &&
+//               !locationIdArr?.includes(attraction.location_id)) || (
+//               <motion.div
+//                 initial={{ opacity: 0 }}
+//                 animate={{ opacity: 1 }}
+//                 exit={{ opacity: 0 }}
+//                 className='photo-container'
+//                 key={attraction.location_id}
+//               >
+//                 <button
+//                   type='button'
+//                   onClick={
+//                     currentUser === null
+//                       ? () => {
+//                           console.log('no user. please offer to login');
+//                         }
+//                       : () => {
+//                           if (locationIdArr?.includes(attraction.location_id)) {
+//                             docIdObject?.map((object) => {
+//                               object.location_id === attraction.location_id
+//                                 ? deleteBookmarks(object.docID)
+//                                 : null;
+//                             });
+//                             console.log('deleted location');
+//                           } else {
+//                             addBookmarks({
+//                               location_id: attraction.location_id,
+//                               photo: attraction.photo.images.original.url,
+//                               latitude: attraction.latitude,
+//                               longitude: attraction.longitude,
+//                               displayName: currentUser?.displayName,
+//                               email: currentUser?.email,
+//                               photoURL: currentUser?.photoURL,
+//                               uid: currentUser?.uid,
+//                               createdAt: serverTimestamp(),
+//                             });
+//                           }
+//                         }
+//                   }
+//                 >
+//                   <BsBookmarkCheckFill
+//                     style={
+//                       locationIdArr?.includes(attraction.location_id)
+//                         ? { color: '#46bcec' }
+//                         : { color: 'rgba(0, 0, 0, 0.5)' }
+//                     }
+//                   />
+//                 </button>
+//                 <img src={attraction.photo.images.original.url} alt='' />
+//               </motion.div>
+//             )}
+//           </AnimatePresence>
+//         ))}
+//       </div>
+//       <AttractionDescription />
+//       {/* ================================================================ */}
+//     </Wrapper>
+//   );
+// }

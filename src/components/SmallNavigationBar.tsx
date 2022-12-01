@@ -1,8 +1,6 @@
-import React from 'react';
 import styled from 'styled-components';
 import { setCarouselView } from '../features/NewJourney/NewJourneySlice';
 import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks';
-import { smallLinks } from '../utilities/smallLinks';
 
 function SmallNavigationBar() {
   const {
@@ -11,17 +9,22 @@ function SmallNavigationBar() {
   const dispatch = useAppDispatch();
   return (
     <Wrapper>
-      {smallLinks.map((link) => (
-        <button
-          // disabled={link.disabled}
-          key={link.id}
-          type='button'
-          className='button'
-          onClick={() => dispatch(setCarouselView())}
-        >
-          {link.text}
-        </button>
-      ))}
+      <button
+        disabled={allPlacesShown}
+        type='button'
+        className='button'
+        onClick={() => dispatch(setCarouselView())}
+      >
+        All places
+      </button>
+      <button
+        disabled={!allPlacesShown}
+        type='button'
+        className='button'
+        onClick={() => dispatch(setCarouselView())}
+      >
+        Bookmarks
+      </button>
     </Wrapper>
   );
 }
@@ -33,10 +36,15 @@ const Wrapper = styled.div`
   color: rgba(242, 242, 243, 255);
   padding-right: 15px;
   font-family: var(--secondaryFont);
-  font-size: 1.1rem;
+  font-size: 1.2rem;
+  font-weight: 500;
   .button {
     padding-left: 1.5rem;
     &:hover {
+      color: #46bcec;
+      transition: all 0.3s ease-in-out;
+    }
+    &:disabled {
       color: #46bcec;
       transition: all 0.3s ease-in-out;
     }

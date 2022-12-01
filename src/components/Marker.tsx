@@ -1,8 +1,7 @@
 import React, { useEffect } from 'react';
-import { TbMapPin } from 'react-icons/tb';
 import styled from 'styled-components';
-import { Attraction } from '../features/NewJourney/NewJourneySlice';
 import { useAppSelector } from '../hooks/reduxHooks';
+import { motion, AnimatePresence } from 'framer-motion';
 
 // I spent two day looking for
 // solution (when I remove "any"
@@ -10,46 +9,34 @@ import { useAppSelector } from '../hooks/reduxHooks';
 // figure out how to solve this
 
 function Marker(props: any) {
-  // console.log(props.props);
   let { attraction } = props;
-  // console.log(attraction);
 
   const {
     newJourney: { locationIdArr, allPlacesShown },
   } = useAppSelector((state) => state);
 
-  useEffect(() => {
-    // console.log(
-    //   locationsId?.includes(attraction.location_id),
-    //   attraction.location_id,
-    //   { locationsId }
-    // );
-    console.log('test');
-  }, []);
-
   return (
-    // <Wrapper>
-    <Wrapper
-      style={
-        !allPlacesShown && !locationIdArr?.includes(attraction.location_id)
-          ? { display: 'none' }
-          : {}
-      }
-    >
-      <div className='pin-container'>
-        {/* {attraction?.photo?.images?.medium?.url ? } */}
-
-        <img
-          style={
-            locationIdArr?.includes(attraction.location_id)
-              ? { border: '3px solid #46bcec ' }
-              : {}
-          }
-          src={attraction?.photo?.images?.medium?.url}
-          alt={attraction?.name}
-        />
-      </div>
-    </Wrapper>
+    <AnimatePresence>
+      {(!allPlacesShown &&
+        !locationIdArr?.includes(attraction.location_id)) || (
+        <Wrapper>
+          <div className='pin-container'>
+            <motion.img
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              style={
+                locationIdArr?.includes(attraction.location_id)
+                  ? { border: '3px solid #46bcec ' }
+                  : {}
+              }
+              src={attraction?.photo?.images?.medium?.url}
+              alt={attraction?.name}
+            />
+          </div>
+        </Wrapper>
+      )}
+    </AnimatePresence>
   );
 }
 
@@ -58,8 +45,6 @@ export default Marker;
 const Wrapper = styled.div`
   height: 60px;
   width: 60px;
-  /* display: none; */
-  /* background-color: red; */
 
   .pin-container {
     font-size: 2rem;
@@ -84,3 +69,9 @@ const Wrapper = styled.div`
     }
   }
 `;
+
+// style={
+//   !allPlacesShown && !locationIdArr?.includes(attraction.location_id)
+//     ? { display: 'none' }
+//     : {}
+// }
