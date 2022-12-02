@@ -4,6 +4,7 @@ import type { RootState } from '../../app/store';
 import axios from 'axios';
 import GoogleMapReact from '../../../node_modules/@types/google-map-react/index';
 import { tempAttractions } from './tempAttractions';
+import { string } from 'prop-types';
 
 let apiURL: string =
   'https://travel-advisor.p.rapidapi.com/attractions/list-in-boundary';
@@ -48,6 +49,9 @@ export interface Attraction {
   latitude: string;
   longitude: string;
   location_id: string;
+  address: string;
+  name: string;
+  description: string;
   photo: {
     images: {
       large: {
@@ -82,6 +86,11 @@ export interface DocIdObject {
 }
 
 interface AttractionsState {
+  activeAttraction: {
+    description: string;
+    name: string;
+    address: string;
+  } | null;
   allPlacesShown: boolean;
   currentUser: User | null;
   childClicked: number | null;
@@ -98,6 +107,7 @@ interface AttractionsState {
 }
 
 const initialState: AttractionsState = {
+  activeAttraction: null,
   allPlacesShown: true,
   currentUser: null,
   childClicked: null,
@@ -121,6 +131,9 @@ export const newJourneySlice = createSlice({
   name: 'newJourney',
   initialState,
   reducers: {
+    setActiveAttraction: (state, action) => {
+      state.activeAttraction = action.payload;
+    },
     setCarouselView: (state) => {
       state.allPlacesShown = !state.allPlacesShown;
     },
@@ -185,6 +198,7 @@ export const {
   setDocIdObject,
   setLocationIdArr,
   setCarouselView,
+  setActiveAttraction,
 } = newJourneySlice.actions;
 
 export const selectCount = (state: RootState) => state.newJourney.attractions;

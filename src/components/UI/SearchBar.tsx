@@ -20,6 +20,9 @@ function SearchBar() {
 export default SearchBar;
 
 const Wrapper = styled.div`
+  position: static;
+  padding-top: 1.5rem;
+  /* top: 5rem; */
   width: 80%;
   display: flex;
   justify-content: space-between;

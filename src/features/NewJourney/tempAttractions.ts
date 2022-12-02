@@ -9,12 +9,13 @@ export const tempAttractions = [
       street1: 'ul. Wiankowa 3',
       street2: '',
     },
+
     name: 'Old Market Square',
     latitude: '52.40791',
     longitude: '16.9341',
     location_id: '287788',
     description:
-      'The lake is known for major kayak and rowing events. It was created by damming up the Cybina River and covers an area of 64 hectares. It is situated in the East part of the city.',
+      "is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make",
     photo: {
       images: {
         large: {
@@ -51,7 +52,7 @@ export const tempAttractions = [
     longitude: '16.935383',
     location_id: '6621289',
     description:
-      'The lake is known for major kayak and rowing events. It was created by damming up the Cybina River and covers an area of 64 hectares. It is situated in the East part of the city.',
+      'a type specimen book. It has survived na type specimen book. It has survived na type specimen book. It has survived na type specimen book. It has survived na type specimen book. It has survived na type specimen book. It has survived na type specimen book. It has survived na type specimen book. It has survived na type specimen book. It has survived na type specimen book. It has survived na type specimen book. It has survived na type specimen book. It has survived na type specimen book. It has survived na type specimen book. It has survived na type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop',
     photo: {
       images: {
         large: {

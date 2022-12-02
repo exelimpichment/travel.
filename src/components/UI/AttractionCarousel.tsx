@@ -3,14 +3,18 @@ import tempUser from '../../assets/tempUser.jpg';
 import styled from 'styled-components';
 import { useAppSelector, useAppDispatch } from '../../hooks/reduxHooks';
 import {
+  BsBookmarkCheckFill,
   BsFillArrowRightCircleFill,
   BsFillArrowLeftCircleFill,
 } from 'react-icons/bs';
 import { motion, AnimatePresence } from 'framer-motion';
 import SmallNavigationBar from '../SmallNavigationBar';
 import AttractionDescription from '../AttractionDescription';
-import { BsFillBookmarkFill, BsBookmarkCheckFill } from 'react-icons/bs';
-import { User, Attraction } from '../../features/NewJourney/NewJourneySlice';
+import {
+  User,
+  Attraction,
+  setActiveAttraction,
+} from '../../features/NewJourney/NewJourneySlice';
 import {
   collection,
   addDoc,
@@ -96,6 +100,14 @@ function AttractionCarousel() {
     });
   }, []);
 
+  // sets first image description
+  useEffect(() => {
+    if (attractions) {
+      const { description, name, address } = attractions[0];
+      dispatch(setActiveAttraction({ description, name, address }));
+    }
+  }, [attractions]);
+
   return (
     <Wrapper>
       <div className='small-menu-container'>
@@ -113,7 +125,19 @@ function AttractionCarousel() {
       <div className='carousel' ref={ScrollCarouselY}>
         {/* <div className='carousel'> */}
         {attractions?.map((attraction) => (
-          <div className='photo-container' key={attraction.location_id}>
+          <div
+            className='photo-container'
+            key={attraction.location_id}
+            onClick={() =>
+              dispatch(
+                setActiveAttraction({
+                  description: attraction.description,
+                  name: attraction.name,
+                  address: attraction.address,
+                })
+              )
+            }
+          >
             <button
               type='button'
               onClick={
@@ -121,7 +145,8 @@ function AttractionCarousel() {
                   ? () => {
                       console.log('no user. please offer to login');
                     }
-                  : () => {
+                  : (event) => {
+                      event.stopPropagation();
                       if (locationIdArr?.includes(attraction.location_id)) {
                         docIdObject?.map((object) => {
                           object.location_id === attraction.location_id
@@ -130,6 +155,7 @@ function AttractionCarousel() {
                         });
                         console.log('deleted location');
                       } else {
+                        event.stopPropagation();
                         addBookmarks({
                           location_id: attraction.location_id,
                           photo: attraction.photo.images.original.url,

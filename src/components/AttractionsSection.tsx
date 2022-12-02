@@ -25,9 +25,11 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-around;
+  justify-content: space-between;
   height: 100vh;
   width: 40vw;
   margin-left: 3rem;
   border-radius: 3rem 0 0 3rem;
+  /* padding: 20px 0 0px 0; */
+  overflow: hidden;
 `;
