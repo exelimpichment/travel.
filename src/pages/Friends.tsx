@@ -15,6 +15,6 @@ const Wrapper = styled.div`
   /* justify-content: space-around; */
   height: 100vh;
   width: 40vw;
-  margin-left: 3rem;
+
   border-radius: 3rem 0 0 3rem;
 `;

@@ -14,12 +14,11 @@ import { AnimatePresence } from 'framer-motion';
 
 function AnimatedRoutes() {
   const location = useLocation();
-  console.log(location.pathname);
-  console.log(location.pathname.split('/')[1]);
   return (
     // <AnimatePresence>
     <AnimatePresence mode={'wait'}>
       {/* <AnimatePresence initial={false} mode={'wait'}> */}
+      {/* mode should be wait to make smooth transition */}
       <Routes location={location} key={location.pathname}>
         <Route path='/' element={<HeroPage />} />
         <Route path='new-journey' element={<NewJourney />}>

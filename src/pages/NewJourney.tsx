@@ -152,7 +152,7 @@ function NewJourney() {
         //  innerWidth of window + with of div
         animate={{ x: 0 }}
         exit={{ x: innerWidth + 1000 }}
-        transition={{ duration: 1 }}
+        transition={{ duration: 0.9 }}
       >
         <Outlet />
       </motion.div>
@@ -165,6 +165,7 @@ export default NewJourney;
 const Wrapper = styled.div`
   display: flex;
   .map-container {
+    margin-right: 3rem;
     height: 100vh;
     width: 60vw;
     background-color: rgba(0, 0, 0, 0.5);

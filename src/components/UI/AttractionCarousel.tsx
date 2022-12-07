@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, createRef } from 'react';
 import tempUser from '../../assets/tempUser.jpg';
 import styled from 'styled-components';
 import { useAppSelector, useAppDispatch } from '../../hooks/reduxHooks';
@@ -14,6 +14,7 @@ import {
   User,
   Attraction,
   setActiveAttraction,
+  setElementRef,
 } from '../../features/NewJourney/NewJourneySlice';
 import {
   collection,
@@ -36,10 +37,11 @@ import {
 function AttractionCarousel() {
   const dispatch = useAppDispatch();
   // const ScrollCarouselY = useRef<null | HTMLDanivElement>(null);
-  const ScrollCarouselY = useRef<null | any>(null);
+  const ScrollCarouselY = useRef<null | HTMLDivElement>(null);
 
   const scroll = (scrollOffset: number): void => {
-    ScrollCarouselY.current.scrollLeft += scrollOffset;
+    if (ScrollCarouselY.current !== null)
+      ScrollCarouselY.current.scrollLeft += scrollOffset;
   };
 
   const {
@@ -49,6 +51,7 @@ function AttractionCarousel() {
       locationIdArr,
       docIdObject,
       allPlacesShown,
+      elementRef,
     },
   } = useAppSelector((state) => state);
 
@@ -69,6 +72,7 @@ function AttractionCarousel() {
   };
 
   interface Bookmark extends User {
+    name: string;
     location_id: string;
     photo: string;
     latitude: string;
@@ -108,6 +112,16 @@ function AttractionCarousel() {
     }
   }, [attractions]);
 
+  // useEffect(() => {
+  //   const refs = Array(attractions?.length)
+  //     .fill()
+  //     .map((_, i) => {
+  //       elementRef[i] || createRef();
+  //     });
+
+  //   dispatch(setElementRef(refs));
+  // }, [attractions]);
+
   return (
     <Wrapper>
       <div className='small-menu-container'>
@@ -121,22 +135,24 @@ function AttractionCarousel() {
         </div>
         <SmallNavigationBar />
       </div>
-      {/* ================================================================ */}
+      {/* ================================================= */}
       <div className='carousel' ref={ScrollCarouselY}>
         {/* <div className='carousel'> */}
-        {attractions?.map((attraction) => (
+        {attractions?.map((attraction, i) => (
           <div
+            // ref={elementRef[i]}
             className='photo-container'
             key={attraction.location_id}
-            onClick={() =>
+            onClick={() => {
+              console.log('click on a photo');
               dispatch(
                 setActiveAttraction({
                   description: attraction.description,
                   name: attraction.name,
                   address: attraction.address,
                 })
-              )
-            }
+              );
+            }}
           >
             <button
               type='button'
@@ -157,6 +173,7 @@ function AttractionCarousel() {
                       } else {
                         event.stopPropagation();
                         addBookmarks({
+                          name: attraction.name,
                           location_id: attraction.location_id,
                           photo: attraction.photo.images.original.url,
                           latitude: attraction.latitude,

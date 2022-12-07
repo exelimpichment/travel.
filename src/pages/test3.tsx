@@ -14,13 +14,12 @@ import {
 } from 'firebase/firestore';
 import { db } from '../firebase/firebaseConfig';
 import { setBookmarks } from '../features/Bookmarks/BookmarksSlice';
-import Bookmark from '../components/Bookmark';
 
 function Bookmarks() {
+  // let bookmarksArray: object[] = [];
   let lastVisibleBookmark: any;
 
   const {
-    newJourney: { currentUser },
     bookMarks: { bookmarks },
   } = useAppSelector((state) => state);
 
@@ -28,17 +27,15 @@ function Bookmarks() {
 
   let getBookmarks = async () => {
     const firstLoading = query(
-      collection(db, 'users', `${currentUser?.uid}`, 'bookmarks'),
+      collection(db, 'users', 'nsidPuwRICdck5LhWHg9WBg0Z383', 'bookmarks'),
       orderBy('createdAt'),
-      limit(10)
+      limit(5)
     );
     const querySnapshot = await getDocs(firstLoading);
     let fetchedBookmarks: object[] = [];
     querySnapshot.forEach((doc) => {
-      // console.log(doc.id, ' => ', doc.data());
       let docId = doc.id;
       const {
-        name,
         displayName,
         email,
         latitude,
@@ -49,7 +46,6 @@ function Bookmarks() {
         uid,
       } = doc.data();
       fetchedBookmarks.push({
-        name,
         displayName,
         docId,
         email,
@@ -61,14 +57,16 @@ function Bookmarks() {
         uid,
       });
     });
-    console.log('test');
+    // console.log('test');
     dispatch(setBookmarks(fetchedBookmarks));
     lastVisibleBookmark = querySnapshot.docs[querySnapshot.docs.length - 1];
+    // bookmarksArray = fetchedBookmarks;
   };
 
   useEffect(() => {
     getBookmarks();
   }, []);
+
   // =========== scroll logic ===========
 
   const scrollRef = useRef<HTMLDivElement | null>(null);
@@ -137,13 +135,17 @@ function Bookmarks() {
     // dispatch(setBookmarks(newlyFetchedBookmarks));
   };
 
+  let arr = [
+    1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
+    22, 23, 24,
+  ];
+
   return (
     <Wrapper ref={scrollRef}>
-      <div className='flex-container'>
-        {bookmarks?.map((bookmark) => (
-          <Bookmark key={bookmark.location_id} bookmark={bookmark}></Bookmark>
-        ))}
-      </div>
+      Bookmarks
+      {arr.map((item, i) => (
+        <h1 key={i}>lol</h1>
+      ))}
     </Wrapper>
   );
 }
@@ -156,16 +158,6 @@ const Wrapper = styled.div`
   color: #fff;
   height: 100vh;
   width: 40vw;
+  margin-left: 3rem;
   border-radius: 3rem 0 0 3rem;
-
-  .flex-container {
-    display: grid;
-    grid-template-columns: 50% 50%;
-    grid-gap: 1rem;
-    padding: 1rem;
-    margin-right: 1rem;
-    cursor: pointer;
-
-    /* grid-template-rows: 12px 12px ; */
-  }
 `;

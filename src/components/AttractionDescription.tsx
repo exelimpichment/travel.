@@ -29,14 +29,17 @@ const Wrapper = styled.div`
   display: flex;
   transition: all 0.3 ease;
   overflow: hidden;
-  max-height: 15%;
+  /* max-height: 15%; */
   justify-content: center;
   align-items: center;
   padding: 0 15px 0 15px;
 
   p {
-    overflow: scroll;
-    /* max-height: 60%; */
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+
     font-style: italic;
     font-size: 1.2rem;
     font-family: var(--mainFont);

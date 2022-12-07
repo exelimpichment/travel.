@@ -86,6 +86,7 @@ export interface DocIdObject {
 }
 
 interface AttractionsState {
+  elementRef: [];
   activeAttraction: {
     description: string;
     name: string;
@@ -106,10 +107,19 @@ interface AttractionsState {
   };
 }
 
+let tempUser = {
+  displayName: 'Mykhailo Kosovan',
+  email: 'oldestspy@gmail.com',
+  photoURL:
+    'https://lh3.googleusercontent.com/a/ALm5wu20RKMcrCt6l1jyhWbMNm6lUYZJe_Rqyz8WDS8P0A=s96-c',
+  uid: 'ucCCwdqk0JbZKhSLTEH4vGtAkuG2',
+};
+
 const initialState: AttractionsState = {
+  elementRef: [],
   activeAttraction: null,
   allPlacesShown: true,
-  currentUser: null,
+  currentUser: tempUser,
   childClicked: null,
   // attractions: undefined,
   docIdObject: null,
@@ -131,6 +141,9 @@ export const newJourneySlice = createSlice({
   name: 'newJourney',
   initialState,
   reducers: {
+    setElementRef: (state, action) => {
+      state.elementRef = action.payload;
+    },
     setActiveAttraction: (state, action) => {
       state.activeAttraction = action.payload;
     },
@@ -199,8 +212,9 @@ export const {
   setLocationIdArr,
   setCarouselView,
   setActiveAttraction,
+  setElementRef,
 } = newJourneySlice.actions;
 
-export const selectCount = (state: RootState) => state.newJourney.attractions;
+// export const selectNewJourney = (state: RootState) => state.newJourney.attractions;
 
 export default newJourneySlice;
