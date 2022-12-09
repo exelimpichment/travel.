@@ -8,11 +8,15 @@ import {
   signInWithRedirect,
   signOut,
 } from '../../firebase/firebaseConfig';
+import { setToggleNavbarOpen } from '../../features/NewJourney/NewJourneySlice';
+import { useAppDispatch } from '../../hooks/reduxHooks';
 
 function GoogleLoginButton() {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   const handleSignIn = () => {
+    dispatch(setToggleNavbarOpen('off'));
     signInWithRedirect(auth, provider);
 
     // navigate('/new-journey/attractions');

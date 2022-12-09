@@ -3,7 +3,7 @@ import type { PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from '../../app/store';
 
 interface BookmarksState {
-  bookmarks: IBookmark[] | null;
+  bookmarks: IBookmark[] | [];
 }
 
 export interface IBookmark {
@@ -20,7 +20,7 @@ export interface IBookmark {
 }
 
 const initialState: BookmarksState = {
-  bookmarks: null,
+  bookmarks: [],
 };
 
 export const bookmarksSlice = createSlice({

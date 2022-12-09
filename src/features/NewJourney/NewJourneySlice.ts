@@ -86,6 +86,7 @@ export interface DocIdObject {
 }
 
 interface AttractionsState {
+  toggleNavbarOpen: boolean;
   elementRef: [];
   activeAttraction: {
     description: string;
@@ -116,6 +117,7 @@ let tempUser = {
 };
 
 const initialState: AttractionsState = {
+  toggleNavbarOpen: false,
   elementRef: [],
   activeAttraction: null,
   allPlacesShown: true,
@@ -141,6 +143,11 @@ export const newJourneySlice = createSlice({
   name: 'newJourney',
   initialState,
   reducers: {
+    setToggleNavbarOpen: (state, action) => {
+      action.payload === 'off'
+        ? (state.toggleNavbarOpen = false)
+        : (state.toggleNavbarOpen = !state.toggleNavbarOpen);
+    },
     setElementRef: (state, action) => {
       state.elementRef = action.payload;
     },
@@ -167,6 +174,9 @@ export const newJourneySlice = createSlice({
     },
     setBounds: (state, action) => {
       state.bounds = action.payload;
+    },
+    setFindMeZoom: (state, action) => {
+      state.zoom = action.payload;
     },
     setZoom: (state: AttractionsState, action) => {
       if (action.payload === 'decrement' && state.zoom > 3) {
@@ -213,6 +223,8 @@ export const {
   setCarouselView,
   setActiveAttraction,
   setElementRef,
+  setToggleNavbarOpen,
+  setFindMeZoom,
 } = newJourneySlice.actions;
 
 // export const selectNewJourney = (state: RootState) => state.newJourney.attractions;

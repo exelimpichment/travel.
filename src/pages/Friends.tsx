@@ -1,12 +1,31 @@
 import styled from 'styled-components';
+import FriendsScrollBar from '../components/UI/FriendsScrollBar';
+import { setSearchWindowOpen } from '../features/Friends/FriendsSlice';
+import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks';
 
 function Friends() {
-  return <Wrapper> Friends</Wrapper>;
+  const dispatch = useAppDispatch();
+
+  const {
+    friends: {},
+    newJourney: { currentUser },
+    bookMarks: { bookmarks },
+  } = useAppSelector((state) => state);
+
+  return (
+    <Wrapper>
+      <FriendsScrollBar></FriendsScrollBar>
+    </Wrapper>
+  );
 }
 
 export default Friends;
 
 const Wrapper = styled.div`
+  padding: 20px 0 0 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   background-color: rgba(0, 0, 0, 0.5);
   color: #fff;
   /* display: flex; */

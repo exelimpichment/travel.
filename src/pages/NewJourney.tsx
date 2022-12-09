@@ -107,6 +107,7 @@ function NewJourney() {
         }}
       >
         <ZoomButton></ZoomButton>
+
         <GoogleMapReact
           bootstrapURLKeys={{ key: 'AIzaSyA74mseU6zIQdvYJimqzGyizKhHkzu379s' }}
           // defaultCenter={coordinates}
@@ -169,6 +170,8 @@ const Wrapper = styled.div`
     height: 100vh;
     width: 60vw;
     background-color: rgba(0, 0, 0, 0.5);
+    /* position: relative; // < ===== REMOVE THIS IF NOT NEEDED | try this when you have some glitch */
+    // this might be a reason
   }
 
   .attraction-section {

@@ -11,29 +11,88 @@ import {
   limit,
   startAfter,
   orderBy,
+  onSnapshot,
 } from 'firebase/firestore';
 import { db } from '../firebase/firebaseConfig';
 import { setBookmarks } from '../features/Bookmarks/BookmarksSlice';
 import Bookmark from '../components/Bookmark';
 
 function Bookmarks() {
-  let lastVisibleBookmark: any;
-
+  const dispatch = useAppDispatch();
   const {
     newJourney: { currentUser },
     bookMarks: { bookmarks },
   } = useAppSelector((state) => state);
 
-  const dispatch = useAppDispatch();
+  let lolRef = useRef([]);
+
+  let lastVisibleBookmark: any;
+
+  // MAKE FIRST QUERRY =========
 
   let getBookmarks = async () => {
+    console.log(currentUser);
+
     const firstLoading = query(
       collection(db, 'users', `${currentUser?.uid}`, 'bookmarks'),
       orderBy('createdAt'),
-      limit(10)
+      limit(8)
     );
-    const querySnapshot = await getDocs(firstLoading);
-    let fetchedBookmarks: object[] = [];
+
+    const unsubscribe = onSnapshot(firstLoading, (querySnapshot) => {
+      const fetchedBookmarks: object[] = [];
+      querySnapshot.forEach((doc) => {
+        // console.log(doc.id, ' => ', doc.data());
+        let docId = doc.id;
+        const {
+          name,
+          displayName,
+          email,
+          latitude,
+          location_id,
+          longitude,
+          photo,
+          photoURL,
+          uid,
+        } = doc.data();
+        fetchedBookmarks.push({
+          name,
+          displayName,
+          docId,
+          email,
+          latitude,
+          location_id,
+          longitude,
+          photo,
+          photoURL,
+          uid,
+        });
+      });
+      console.log('render');
+      lolRef.current = [...fetchedBookmarks];
+      dispatch(setBookmarks(fetchedBookmarks));
+      lastVisibleBookmark = querySnapshot.docs[querySnapshot.docs.length - 1];
+    });
+  };
+
+  useEffect(() => {
+    getBookmarks();
+  }, []);
+
+  // ===================== ADDITIONAL BOOKMARKS' FETCH===========================================
+
+  let getAdditionalBookmark = async (bookmarks: any) => {
+    console.log('inside', bookmarks);
+
+    const followingLoadings = query(
+      collection(db, 'users', `${currentUser?.uid}`, 'bookmarks'),
+      orderBy('createdAt'),
+      startAfter(lastVisibleBookmark),
+      limit(8)
+    );
+
+    const querySnapshot = await getDocs(followingLoadings);
+    let newlyFetchedBookmarks: object[] = [];
     querySnapshot.forEach((doc) => {
       // console.log(doc.id, ' => ', doc.data());
       let docId = doc.id;
@@ -48,7 +107,7 @@ function Bookmarks() {
         photoURL,
         uid,
       } = doc.data();
-      fetchedBookmarks.push({
+      newlyFetchedBookmarks.push({
         name,
         displayName,
         docId,
@@ -61,14 +120,15 @@ function Bookmarks() {
         uid,
       });
     });
-    console.log('test');
-    dispatch(setBookmarks(fetchedBookmarks));
-    lastVisibleBookmark = querySnapshot.docs[querySnapshot.docs.length - 1];
-  };
+    console.log(bookmarks, '!!!!!!');
+    console.log(lolRef.current, '?????');
+    console.log(newlyFetchedBookmarks);
+    let arr: any = lolRef.current.concat(newlyFetchedBookmarks);
+    console.log(arr);
+    //   return newlyFetchedBookmarks;
 
-  useEffect(() => {
-    getBookmarks();
-  }, []);
+    dispatch(setBookmarks(arr));
+  };
   // =========== scroll logic ===========
 
   const scrollRef = useRef<HTMLDivElement | null>(null);
@@ -77,8 +137,7 @@ function Bookmarks() {
     const target = e.target as HTMLDivElement;
 
     if (target.scrollHeight - (target.scrollTop + window.innerHeight) < 100) {
-      console.log(bookmarks);
-
+      console.log('load next batch');
       getAdditionalBookmark(bookmarks);
     }
   };
@@ -91,51 +150,7 @@ function Bookmarks() {
         scrollRef.current.removeEventListener('scroll', handleScroll);
     };
   }, []);
-
   // =========== scroll logic ===========
-
-  // ===================== ADDITIONAL BOOKMARKS' FETCH===========================================
-
-  let getAdditionalBookmark = async (bookmarks: any) => {
-    const additionalLoading = query(
-      collection(db, 'users', 'nsidPuwRICdck5LhWHg9WBg0Z383', 'bookmarks'),
-      orderBy('createdAt'),
-      startAfter(lastVisibleBookmark),
-      limit(5)
-    );
-    const querySnapshot = await getDocs(additionalLoading);
-    let newlyFetchedBookmarks: object[] = [];
-    querySnapshot.forEach((doc) => {
-      // console.log(doc.id, ' => ', doc.data());
-      const {
-        displayName,
-        docID,
-        email,
-        latitude,
-        location_id,
-        longitude,
-        photo,
-        photoURL,
-        uid,
-      } = doc.data();
-      newlyFetchedBookmarks.push({
-        displayName,
-        docID,
-        email,
-        latitude,
-        location_id,
-        longitude,
-        photo,
-        photoURL,
-        uid,
-      });
-    });
-
-    console.log(bookmarks, '!!!!!!');
-    console.log(newlyFetchedBookmarks);
-    return newlyFetchedBookmarks;
-    // dispatch(setBookmarks(newlyFetchedBookmarks));
-  };
 
   return (
     <Wrapper ref={scrollRef}>
@@ -144,6 +159,27 @@ function Bookmarks() {
           <Bookmark key={bookmark.location_id} bookmark={bookmark}></Bookmark>
         ))}
       </div>
+      {/* <h1>lol</h1>
+      <h1>lol</h1>
+      <h1>lol</h1>
+      <h1>lol</h1>
+      <h1>lol</h1>
+      <h1>lol</h1>
+      <h1>lol</h1>
+      <h1>lol</h1>
+      <h1>lol</h1>
+      <h1>lol</h1>
+      <h1>lol</h1>
+      <h1>lol</h1>
+      <h1>lol</h1>
+      <h1>lol</h1>
+      <h1>lol</h1>
+      <h1>lol</h1>
+      <h1>lol</h1>
+      <h1>lol</h1>
+      <h1>lol</h1>
+      <h1>lol</h1>
+      <h1>lol</h1> */}
     </Wrapper>
   );
 }
@@ -165,7 +201,5 @@ const Wrapper = styled.div`
     padding: 1rem;
     margin-right: 1rem;
     cursor: pointer;
-
-    /* grid-template-rows: 12px 12px ; */
   }
 `;

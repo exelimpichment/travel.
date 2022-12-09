@@ -7,6 +7,8 @@ import {
   facebookProvider,
 } from '../../firebase/firebaseConfig';
 import { useNavigate, Link } from 'react-router-dom';
+import { useAppDispatch } from '../../hooks/reduxHooks';
+import { setToggleNavbarOpen } from '../../features/NewJourney/NewJourneySlice';
 
 // const handleSignIn = () => {
 //   signInWithRedirect(auth, facebookProvider).catch((error) => {
@@ -17,8 +19,10 @@ import { useNavigate, Link } from 'react-router-dom';
 
 function FacebookLoginButton() {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   const handleSignIn = () => {
+    dispatch(setToggleNavbarOpen('off'));
     signInWithRedirect(auth, facebookProvider).catch((error) => {
       console.log(error);
     });

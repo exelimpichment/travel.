@@ -6,11 +6,17 @@ import { useAppSelector, useAppDispatch } from '../hooks/reduxHooks';
 import { handleSignOut } from '../firebase/firebaseConfig';
 import { useNavigate, Link } from 'react-router-dom';
 import { GiMountains } from 'react-icons/gi';
-import { setCurrentUser } from '../features/NewJourney/NewJourneySlice';
+import {
+  setCurrentUser,
+  setToggleNavbarOpen,
+} from '../features/NewJourney/NewJourneySlice';
 import { redirect } from 'react-router-dom';
 
 function NavigationBar2() {
-  const [toggleNavbarOpen, setToggleNavbarOpen] = useState(false);
+  const {
+    newJourney: { toggleNavbarOpen },
+  } = useAppSelector((state) => state);
+  // const [toggleNavbarOpen, setToggleNavbarOpen] = useState(false);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   return (
@@ -33,7 +39,7 @@ function NavigationBar2() {
             whileHover={{ scale: 1.1 }}
             type='button'
             className='menuToggle'
-            onClick={() => setToggleNavbarOpen(!toggleNavbarOpen)}
+            onClick={() => dispatch(setToggleNavbarOpen('toggle'))}
           >
             <GiMountains></GiMountains>
           </motion.button>
@@ -53,7 +59,7 @@ function NavigationBar2() {
                     >
                       <button
                         onClick={() => {
-                          setToggleNavbarOpen(false);
+                          dispatch(setToggleNavbarOpen('toggle'));
 
                           navigate(link.path);
                         }}

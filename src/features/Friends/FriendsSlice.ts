@@ -3,20 +3,30 @@ import type { PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from '../../app/store';
 
 interface FriendsState {
-  test2: number;
+  searchWindowOpen: boolean;
+  friendsScrollBarOpen: boolean;
 }
 
 const initialState: FriendsState = {
-  test2: 1,
+  searchWindowOpen: false,
+  friendsScrollBarOpen: true,
 };
 
 export const friendsSlice = createSlice({
   name: 'friends',
   initialState,
-  reducers: {},
+  reducers: {
+    setSearchWindowOpen: (state) => {
+      state.searchWindowOpen = !state.searchWindowOpen;
+    },
+    setFriendsScrollBarOpen: (state) => {
+      state.friendsScrollBarOpen = !state.friendsScrollBarOpen;
+    },
+  },
 });
 
-export const {} = friendsSlice.actions;
+export const { setSearchWindowOpen, setFriendsScrollBarOpen } =
+  friendsSlice.actions;
 
 // export const selectBookmarks = (state: RootState) => state.bookMarks.test;
 
