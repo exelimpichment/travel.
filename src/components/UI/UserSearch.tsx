@@ -1,12 +1,39 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
-import { useAppSelector } from '../../hooks/reduxHooks';
+import { useAppDispatch, useAppSelector } from '../../hooks/reduxHooks';
+import { GoSearch } from 'react-icons/go';
+import { collection, getDocs, query, where } from 'firebase/firestore';
+import { db } from '../../firebase/firebaseConfig';
+import {
+  setSearchedFriend,
+  setUserSearch,
+} from '../../features/Friends/FriendsSlice';
 
 function UserSearch() {
+  const dispatch = useAppDispatch();
+
   const {
-    friends: { searchWindowOpen },
+    friends: { searchWindowOpen, userSearch, searchedFriend },
   } = useAppSelector((state) => state);
+
+  const searchFriend = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const getData = async () => {
+      const userRef = collection(db, 'users');
+      const q = query(userRef, where('email', '==', `${userSearch}`));
+      const querySnapshot = await getDocs(q);
+      let user = {};
+      querySnapshot.forEach((doc) => {
+        user = { ...doc.data(), docId: doc.id };
+      });
+      dispatch(setSearchedFriend(user));
+    };
+    getData();
+
+    dispatch(setUserSearch(''));
+  };
 
   return (
     <Wrapper
@@ -15,7 +42,17 @@ function UserSearch() {
       exit={{ width: 64 }}
       transition={{ duration: 0.6 }}
     >
-      <input type='text' />
+      <input
+        type='text'
+        autoFocus
+        value={userSearch}
+        onChange={(event) => {
+          dispatch(setUserSearch(event.target.value));
+        }}
+      />
+      <button type='button' onClick={searchFriend}>
+        <GoSearch />
+      </button>
     </Wrapper>
   );
 }
@@ -24,6 +61,7 @@ export default UserSearch;
 
 const Wrapper = styled(motion.div)`
   display: flex;
+  flex-direction: row;
   align-items: center;
   justify-content: center;
 
@@ -35,12 +73,24 @@ const Wrapper = styled(motion.div)`
   border-top-right-radius: 32px 32px;
   border-bottom-right-radius: 32px 32px;
 
+  button {
+    transform: translateY(2px);
+    svg {
+      font-size: 1.7rem;
+    }
+
+    &:hover {
+      color: #46bcec;
+      transition: all 0.3s ease-in-out;
+    }
+  }
+
   /* width: 600px; */
 
   input {
     height: 70%;
-    width: 90%;
-    width: 85%;
+    width: 80%;
+    /* width: 85%; */
 
     border: none;
     appearance: none;

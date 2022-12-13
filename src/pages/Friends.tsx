@@ -1,5 +1,8 @@
+import { AnimatePresence } from 'framer-motion';
+import { useRef } from 'react';
 import styled from 'styled-components';
 import FriendsScrollBar from '../components/UI/FriendsScrollBar';
+import SearchedFriend from '../components/UI/SearchedFriend';
 import { setSearchWindowOpen } from '../features/Friends/FriendsSlice';
 import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks';
 
@@ -7,14 +10,15 @@ function Friends() {
   const dispatch = useAppDispatch();
 
   const {
-    friends: {},
+    friends: { searchedFriend },
     newJourney: { currentUser },
     bookMarks: { bookmarks },
   } = useAppSelector((state) => state);
 
   return (
     <Wrapper>
-      <FriendsScrollBar></FriendsScrollBar>
+      <FriendsScrollBar />
+      <AnimatePresence>{searchedFriend && <SearchedFriend />}</AnimatePresence>
     </Wrapper>
   );
 }

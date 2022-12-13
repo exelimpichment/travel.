@@ -22,7 +22,7 @@ function NavigationBar2() {
   return (
     <>
       <button
-        style={{ position: 'absolute', top: 340, left: 3, zIndex: '999' }}
+        style={{ position: 'absolute', top: 140, left: 3, zIndex: '999' }}
         type='button'
         onClick={() => {
           handleSignOut();

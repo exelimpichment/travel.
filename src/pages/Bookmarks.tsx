@@ -24,19 +24,15 @@ function Bookmarks() {
     bookMarks: { bookmarks },
   } = useAppSelector((state) => state);
 
-  let lolRef = useRef([]);
-
-  let lastVisibleBookmark: any;
+  const [test, setTest] = useState(true);
 
   // MAKE FIRST QUERRY =========
 
   let getBookmarks = async () => {
-    console.log(currentUser);
-
     const firstLoading = query(
       collection(db, 'users', `${currentUser?.uid}`, 'bookmarks'),
       orderBy('createdAt'),
-      limit(8)
+      limit(6)
     );
 
     const unsubscribe = onSnapshot(firstLoading, (querySnapshot) => {
@@ -68,10 +64,12 @@ function Bookmarks() {
           uid,
         });
       });
-      console.log('render');
-      lolRef.current = [...fetchedBookmarks];
+      // console.log(fetchedBookmarks);
+      // lastBookmarksBatchRef.current = [...fetchedBookmarks];
+      // dispatch(setBookmarks(lastBookmarksBatchRef.current));
       dispatch(setBookmarks(fetchedBookmarks));
-      lastVisibleBookmark = querySnapshot.docs[querySnapshot.docs.length - 1];
+      // lastBookmarksBatchRef = querySnapshot.docs[querySnapshot.docs.length - 1];
+      setTest(querySnapshot.docs[querySnapshot.docs.length - 1]);
     });
   };
 
@@ -81,14 +79,12 @@ function Bookmarks() {
 
   // ===================== ADDITIONAL BOOKMARKS' FETCH===========================================
 
-  let getAdditionalBookmark = async (bookmarks: any) => {
-    console.log('inside', bookmarks);
-
+  let getAdditionalBookmark = async () => {
     const followingLoadings = query(
       collection(db, 'users', `${currentUser?.uid}`, 'bookmarks'),
       orderBy('createdAt'),
-      startAfter(lastVisibleBookmark),
-      limit(8)
+      startAfter(test),
+      limit(6)
     );
 
     const querySnapshot = await getDocs(followingLoadings);
@@ -120,66 +116,36 @@ function Bookmarks() {
         uid,
       });
     });
-    console.log(bookmarks, '!!!!!!');
-    console.log(lolRef.current, '?????');
-    console.log(newlyFetchedBookmarks);
-    let arr: any = lolRef.current.concat(newlyFetchedBookmarks);
-    console.log(arr);
-    //   return newlyFetchedBookmarks;
+    // lastBookmarksBatchRef = querySnapshot.docs[querySnapshot.docs.length - 1];
+    // setTest(querySnapshot.docs[querySnapshot.docs.length - 1]);
 
-    dispatch(setBookmarks(arr));
+    let all = new Set([...bookmarks, ...newlyFetchedBookmarks]);
+    console.log(all);
+    return querySnapshot.docs[querySnapshot.docs.length - 1];
+
+    // dispatch(setBookmarks(all));
   };
   // =========== scroll logic ===========
 
-  const scrollRef = useRef<HTMLDivElement | null>(null);
-
-  const handleScroll = (e: Event) => {
-    const target = e.target as HTMLDivElement;
-
-    if (target.scrollHeight - (target.scrollTop + window.innerHeight) < 100) {
-      console.log('load next batch');
-      getAdditionalBookmark(bookmarks);
-    }
-  };
-
-  useEffect(() => {
-    if (scrollRef.current !== null)
-      scrollRef.current.addEventListener('scroll', handleScroll);
-    return function () {
-      if (scrollRef.current !== null)
-        scrollRef.current.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
   // =========== scroll logic ===========
 
   return (
-    <Wrapper ref={scrollRef}>
+    <Wrapper>
+      <button
+        type='button'
+        onClick={() =>
+          getAdditionalBookmark().then((resp) => {
+            setTest(resp);
+          })
+        }
+      >
+        load new
+      </button>
       <div className='flex-container'>
         {bookmarks?.map((bookmark) => (
           <Bookmark key={bookmark.location_id} bookmark={bookmark}></Bookmark>
         ))}
       </div>
-      {/* <h1>lol</h1>
-      <h1>lol</h1>
-      <h1>lol</h1>
-      <h1>lol</h1>
-      <h1>lol</h1>
-      <h1>lol</h1>
-      <h1>lol</h1>
-      <h1>lol</h1>
-      <h1>lol</h1>
-      <h1>lol</h1>
-      <h1>lol</h1>
-      <h1>lol</h1>
-      <h1>lol</h1>
-      <h1>lol</h1>
-      <h1>lol</h1>
-      <h1>lol</h1>
-      <h1>lol</h1>
-      <h1>lol</h1>
-      <h1>lol</h1>
-      <h1>lol</h1>
-      <h1>lol</h1> */}
     </Wrapper>
   );
 }
@@ -187,7 +153,6 @@ function Bookmarks() {
 export default Bookmarks;
 
 const Wrapper = styled.div`
-  overflow: scroll;
   background-color: rgba(0, 0, 0, 0.5);
   color: #fff;
   height: 100vh;

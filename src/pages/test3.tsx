@@ -11,31 +11,238 @@ import {
   limit,
   startAfter,
   orderBy,
+  onSnapshot,
 } from 'firebase/firestore';
 import { db } from '../firebase/firebaseConfig';
 import { setBookmarks } from '../features/Bookmarks/BookmarksSlice';
+import Bookmark from '../components/Bookmark';
 
 function Bookmarks() {
-  // let bookmarksArray: object[] = [];
-  let lastVisibleBookmark: any;
+  // let arrayA = [
+  //   {
+  //     displayName: 'Mykhailo Kosovan',
+  //     docId: 'I8CcgDyMROwHmBMpBmyW',
+  //     email: 'oldestspy@gmail.com',
+  //     latitude: '52.40791',
+  //     location_id: '1',
+  //     longitude: '16.9341',
+  //     name: 'Old Market Square',
+  //     photo:
+  //       'https://media-cdn.tripadvisor.com/media/photo-m/1280/13/4d/ad/bb/old-market-square.jpg',
+  //     photoURL:
+  //       'https://lh3.googleusercontent.com/a/ALm5wu20RKMcrCt6l1jyhWbMNm6lUYZJe_Rqyz8WDS8P0A=s96-c',
+  //     uid: 'ucCCwdqk0JbZKhSLTEH4vGtAkuG2',
+  //   },
+  //   {
+  //     displayName: 'Mykhailo Kosovan',
+  //     docId: 'I8CcgDyMROwHmBMpBmyW',
+  //     email: 'oldestspy@gmail.com',
+  //     latitude: '52.40791',
+  //     location_id: '2',
+  //     longitude: '16.9341',
+  //     name: 'Old Market Square',
+  //     photo:
+  //       'https://media-cdn.tripadvisor.com/media/photo-m/1280/13/4d/ad/bb/old-market-square.jpg',
+  //     photoURL:
+  //       'https://lh3.googleusercontent.com/a/ALm5wu20RKMcrCt6l1jyhWbMNm6lUYZJe_Rqyz8WDS8P0A=s96-c',
+  //     uid: 'ucCCwdqk0JbZKhSLTEH4vGtAkuG2',
+  //   },
+  //   {
+  //     displayName: 'Mykhailo Kosovan',
+  //     docId: 'I8CcgDyMROwHmBMpBmyW',
+  //     email: 'oldestspy@gmail.com',
+  //     latitude: '52.40791',
+  //     location_id: '6',
+  //     longitude: '16.9341',
+  //     name: 'Old Market Square',
+  //     photo:
+  //       'https://media-cdn.tripadvisor.com/media/photo-m/1280/13/4d/ad/bb/old-market-square.jpg',
+  //     photoURL:
+  //       'https://lh3.googleusercontent.com/a/ALm5wu20RKMcrCt6l1jyhWbMNm6lUYZJe_Rqyz8WDS8P0A=s96-c',
+  //     uid: 'ucCCwdqk0JbZKhSLTEH4vGtAkuG2',
+  //   },
+  //   // {
+  //   //   displayName: 'Mykhailo Kosovan',
+  //   //   docId: 'I8CcgDyMROwHmBMpBmyW',
+  //   //   email: 'oldestspy@gmail.com',
+  //   //   latitude: '52.40791',
+  //   //   location_id: '7',
+  //   //   longitude: '16.9341',
+  //   //   name: 'Old Market Square',
+  //   //   photo:
+  //   //     'https://media-cdn.tripadvisor.com/media/photo-m/1280/13/4d/ad/bb/old-market-square.jpg',
+  //   //   photoURL:
+  //   //     'https://lh3.googleusercontent.com/a/ALm5wu20RKMcrCt6l1jyhWbMNm6lUYZJe_Rqyz8WDS8P0A=s96-c',
+  //   //   uid: 'ucCCwdqk0JbZKhSLTEH4vGtAkuG2',
+  //   // },
+  //   // {
+  //   //   displayName: 'Mykhailo Kosovan',
+  //   //   docId: 'I8CcgDyMROwHmBMpBmyW',
+  //   //   email: 'oldestspy@gmail.com',
+  //   //   latitude: '52.40791',
+  //   //   location_id: '5',
+  //   //   longitude: '16.9341',
+  //   //   name: 'Old Market Square',
+  //   //   photo:
+  //   //     'https://media-cdn.tripadvisor.com/media/photo-m/1280/13/4d/ad/bb/old-market-square.jpg',
+  //   //   photoURL:
+  //   //     'https://lh3.googleusercontent.com/a/ALm5wu20RKMcrCt6l1jyhWbMNm6lUYZJe_Rqyz8WDS8P0A=s96-c',
+  //   //   uid: 'ucCCwdqk0JbZKhSLTEH4vGtAkuG2',
+  //   // },
+  // ];
 
+  // let arrayB = [
+  //   {
+  //     displayName: 'Mykhailo Kosovan',
+  //     docId: 'I8CcgDyMROwHmBMpBmyW',
+  //     email: 'oldestspy@gmail.com',
+  //     latitude: '52.40791',
+  //     location_id: '5',
+  //     longitude: '16.9341',
+  //     name: 'Old Market Square',
+  //     photo:
+  //       'https://media-cdn.tripadvisor.com/media/photo-m/1280/13/4d/ad/bb/old-market-square.jpg',
+  //     photoURL:
+  //       'https://lh3.googleusercontent.com/a/ALm5wu20RKMcrCt6l1jyhWbMNm6lUYZJe_Rqyz8WDS8P0A=s96-c',
+  //     uid: 'ucCCwdqk0JbZKhSLTEH4vGtAkuG2',
+  //   },
+  //   {
+  //     displayName: 'Mykhailo Kosovan',
+  //     docId: 'I8CcgDyMROwHmBMpBmyW',
+  //     email: 'oldestspy@gmail.com',
+  //     latitude: '52.40791',
+  //     location_id: '4',
+  //     longitude: '16.9341',
+  //     name: 'Old Market Square',
+  //     photo:
+  //       'https://media-cdn.tripadvisor.com/media/photo-m/1280/13/4d/ad/bb/old-market-square.jpg',
+  //     photoURL:
+  //       'https://lh3.googleusercontent.com/a/ALm5wu20RKMcrCt6l1jyhWbMNm6lUYZJe_Rqyz8WDS8P0A=s96-c',
+  //     uid: 'ucCCwdqk0JbZKhSLTEH4vGtAkuG2',
+  //   },
+  //   {
+  //     displayName: 'Mykhailo Kosovan',
+  //     docId: 'I8CcgDyMROwHmBMpBmyW',
+  //     email: 'oldestspy@gmail.com',
+  //     latitude: '52.40791',
+  //     location_id: '1',
+  //     longitude: '16.9341',
+  //     name: 'Old Market Square',
+  //     photo:
+  //       'https://media-cdn.tripadvisor.com/media/photo-m/1280/13/4d/ad/bb/old-market-square.jpg',
+  //     photoURL:
+  //       'https://lh3.googleusercontent.com/a/ALm5wu20RKMcrCt6l1jyhWbMNm6lUYZJe_Rqyz8WDS8P0A=s96-c',
+  //     uid: 'ucCCwdqk0JbZKhSLTEH4vGtAkuG2',
+  //   },
+  //   {
+  //     displayName: 'Mykhailo Kosovan',
+  //     docId: 'I8CcgDyMROwHmBMpBmyW',
+  //     email: 'oldestspy@gmail.com',
+  //     latitude: '52.40791',
+  //     location_id: '9',
+  //     longitude: '16.9341',
+  //     name: 'Old Market Square',
+  //     photo:
+  //       'https://media-cdn.tripadvisor.com/media/photo-m/1280/13/4d/ad/bb/old-market-square.jpg',
+  //     photoURL:
+  //       'https://lh3.googleusercontent.com/a/ALm5wu20RKMcrCt6l1jyhWbMNm6lUYZJe_Rqyz8WDS8P0A=s96-c',
+  //     uid: 'ucCCwdqk0JbZKhSLTEH4vGtAkuG2',
+  //   },
+  //   {
+  //     displayName: 'Mykhailo Kosovan',
+  //     docId: 'I8CcgDyMROwHmBMpBmyW',
+  //     email: 'oldestspy@gmail.com',
+  //     latitude: '52.40791',
+  //     location_id: '10',
+  //     longitude: '16.9341',
+  //     name: 'Old Market Square',
+  //     photo:
+  //       'https://media-cdn.tripadvisor.com/media/photo-m/1280/13/4d/ad/bb/old-market-square.jpg',
+  //     photoURL:
+  //       'https://lh3.googleusercontent.com/a/ALm5wu20RKMcrCt6l1jyhWbMNm6lUYZJe_Rqyz8WDS8P0A=s96-c',
+  //     uid: 'ucCCwdqk0JbZKhSLTEH4vGtAkuG2',
+  //   },
+  // ];
+  // debugger;
+
+  const dispatch = useAppDispatch();
   const {
+    newJourney: { currentUser },
     bookMarks: { bookmarks },
   } = useAppSelector((state) => state);
 
-  const dispatch = useAppDispatch();
+  const [enableScroll, setEnableScroll] = useState(true);
+
+  let lastBookmarksBatchRef: any = useRef([]); //<=== had to use this because no matter
+  let lastVisibleBookmark: any = useRef([]); // < === how hard I tried with state i could not manage this
+
+  // MAKE FIRST QUERRY =========
 
   let getBookmarks = async () => {
     const firstLoading = query(
-      collection(db, 'users', 'nsidPuwRICdck5LhWHg9WBg0Z383', 'bookmarks'),
+      collection(db, 'users', `${currentUser?.uid}`, 'bookmarks'),
       orderBy('createdAt'),
-      limit(5)
+      limit(6)
     );
-    const querySnapshot = await getDocs(firstLoading);
-    let fetchedBookmarks: object[] = [];
+
+    const unsubscribe = onSnapshot(firstLoading, (querySnapshot) => {
+      const fetchedBookmarks: object[] = [];
+      querySnapshot.forEach((doc) => {
+        // console.log(doc.id, ' => ', doc.data());
+        let docId = doc.id;
+        const {
+          name,
+          displayName,
+          email,
+          latitude,
+          location_id,
+          longitude,
+          photo,
+          photoURL,
+          uid,
+        } = doc.data();
+        fetchedBookmarks.push({
+          name,
+          displayName,
+          docId,
+          email,
+          latitude,
+          location_id,
+          longitude,
+          photo,
+          photoURL,
+          uid,
+        });
+      });
+      // console.log(fetchedBookmarks);
+      lastBookmarksBatchRef.current = [...fetchedBookmarks];
+      dispatch(setBookmarks(lastBookmarksBatchRef.current));
+      lastVisibleBookmark.current =
+        querySnapshot.docs[querySnapshot.docs.length - 1];
+    });
+  };
+
+  useEffect(() => {
+    getBookmarks();
+  }, []);
+
+  // ===================== ADDITIONAL BOOKMARKS' FETCH===========================================
+
+  let getAdditionalBookmark = async () => {
+    const followingLoadings = query(
+      collection(db, 'users', `${currentUser?.uid}`, 'bookmarks'),
+      orderBy('createdAt'),
+      startAfter(lastVisibleBookmark.current),
+      limit(6)
+    );
+
+    const querySnapshot = await getDocs(followingLoadings);
+    let newlyFetchedBookmarks: object[] = [];
     querySnapshot.forEach((doc) => {
+      // console.log(doc.id, ' => ', doc.data());
       let docId = doc.id;
       const {
+        name,
         displayName,
         email,
         latitude,
@@ -45,7 +252,8 @@ function Bookmarks() {
         photoURL,
         uid,
       } = doc.data();
-      fetchedBookmarks.push({
+      newlyFetchedBookmarks.push({
+        name,
         displayName,
         docId,
         email,
@@ -57,16 +265,16 @@ function Bookmarks() {
         uid,
       });
     });
-    // console.log('test');
-    dispatch(setBookmarks(fetchedBookmarks));
-    lastVisibleBookmark = querySnapshot.docs[querySnapshot.docs.length - 1];
-    // bookmarksArray = fetchedBookmarks;
+    let ids = new Set(lastBookmarksBatchRef.current.map((d) => d.docId));
+    let merged = [
+      ...lastBookmarksBatchRef.current,
+      ...newlyFetchedBookmarks.filter((d) => !ids.has(d.docId)),
+    ];
+    dispatch(setBookmarks(merged));
+    console.log(merged);
+    lastVisibleBookmark.current =
+      querySnapshot.docs[querySnapshot.docs.length - 1];
   };
-
-  useEffect(() => {
-    getBookmarks();
-  }, []);
-
   // =========== scroll logic ===========
 
   const scrollRef = useRef<HTMLDivElement | null>(null);
@@ -74,10 +282,9 @@ function Bookmarks() {
   const handleScroll = (e: Event) => {
     const target = e.target as HTMLDivElement;
 
-    if (target.scrollHeight - (target.scrollTop + window.innerHeight) < 100) {
-      console.log(bookmarks);
-
-      getAdditionalBookmark(bookmarks);
+    if (target.scrollHeight - (target.scrollTop + window.innerHeight) < 10) {
+      console.log('load next batch');
+      getAdditionalBookmark();
     }
   };
 
@@ -89,63 +296,18 @@ function Bookmarks() {
         scrollRef.current.removeEventListener('scroll', handleScroll);
     };
   }, []);
-
   // =========== scroll logic ===========
 
-  // ===================== ADDITIONAL BOOKMARKS' FETCH===========================================
-
-  let getAdditionalBookmark = async (bookmarks: any) => {
-    const additionalLoading = query(
-      collection(db, 'users', 'nsidPuwRICdck5LhWHg9WBg0Z383', 'bookmarks'),
-      orderBy('createdAt'),
-      startAfter(lastVisibleBookmark),
-      limit(5)
-    );
-    const querySnapshot = await getDocs(additionalLoading);
-    let newlyFetchedBookmarks: object[] = [];
-    querySnapshot.forEach((doc) => {
-      // console.log(doc.id, ' => ', doc.data());
-      const {
-        displayName,
-        docID,
-        email,
-        latitude,
-        location_id,
-        longitude,
-        photo,
-        photoURL,
-        uid,
-      } = doc.data();
-      newlyFetchedBookmarks.push({
-        displayName,
-        docID,
-        email,
-        latitude,
-        location_id,
-        longitude,
-        photo,
-        photoURL,
-        uid,
-      });
-    });
-
-    console.log(bookmarks, '!!!!!!');
-    console.log(newlyFetchedBookmarks);
-    return newlyFetchedBookmarks;
-    // dispatch(setBookmarks(newlyFetchedBookmarks));
-  };
-
-  let arr = [
-    1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
-    22, 23, 24,
-  ];
-
   return (
-    <Wrapper ref={scrollRef}>
-      Bookmarks
-      {arr.map((item, i) => (
-        <h1 key={i}>lol</h1>
-      ))}
+    <Wrapper
+      ref={scrollRef}
+      style={{ overflow: enableScroll ? 'scroll' : 'hidden' }}
+    >
+      <div className='flex-container'>
+        {bookmarks?.map((bookmark) => (
+          <Bookmark key={bookmark.location_id} bookmark={bookmark}></Bookmark>
+        ))}
+      </div>
     </Wrapper>
   );
 }
@@ -153,11 +315,18 @@ function Bookmarks() {
 export default Bookmarks;
 
 const Wrapper = styled.div`
-  overflow: scroll;
   background-color: rgba(0, 0, 0, 0.5);
   color: #fff;
   height: 100vh;
   width: 40vw;
-  margin-left: 3rem;
   border-radius: 3rem 0 0 3rem;
+
+  .flex-container {
+    display: grid;
+    grid-template-columns: 50% 50%;
+    grid-gap: 1rem;
+    padding: 1rem;
+    margin-right: 1rem;
+    cursor: pointer;
+  }
 `;

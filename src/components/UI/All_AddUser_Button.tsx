@@ -2,12 +2,14 @@ import styled from 'styled-components';
 import { HiOutlinePlusSm } from 'react-icons/hi';
 import {
   setFriendsScrollBarOpen,
+  setSearchedFriend,
   setSearchWindowOpen,
 } from '../../features/Friends/FriendsSlice';
 import { motion } from 'framer-motion';
 import { useAppDispatch, useAppSelector } from '../../hooks/reduxHooks';
 
 function All_AddUser_Button() {
+  const dispatch = useAppDispatch();
   const {
     friends: { searchWindowOpen, friendsScrollBarOpen },
     newJourney: { currentUser },
@@ -15,6 +17,7 @@ function All_AddUser_Button() {
   } = useAppSelector((state) => state);
 
   let swapScrollbarSearch = () => {
+    dispatch(setSearchedFriend(null));
     friendsScrollBarOpen
       ? (dispatch(setFriendsScrollBarOpen()),
         setTimeout(() => {
@@ -26,7 +29,6 @@ function All_AddUser_Button() {
         }, 600));
   };
 
-  const dispatch = useAppDispatch();
   return (
     <Wrapper>
       <div

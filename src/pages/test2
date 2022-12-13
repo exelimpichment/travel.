@@ -1,170 +1,218 @@
+import { useEffect, useRef, useState, useMemo } from 'react';
 import styled from 'styled-components';
-import All_AddUser_Button from './All_AddUser_Button';
-import { HiOutlinePlusSm } from 'react-icons/hi';
-import UserSearch from './UserSearch';
-import { useAppSelector } from '../../hooks/reduxHooks';
-import { AnimatePresence } from 'framer-motion';
-import { friendsPhotos } from '../../features/NewJourney/tempFriendsPhotos';
+import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks';
+import {
+  collection,
+  getDocs,
+  query,
+  doc,
+  getDoc,
+  where,
+  limit,
+  startAfter,
+  orderBy,
+  onSnapshot,
+} from 'firebase/firestore';
+import { db } from '../firebase/firebaseConfig';
+import { setBookmarks } from '../features/Bookmarks/BookmarksSlice';
+import Bookmark from '../components/Bookmark';
 
-function FriendsScrollBar() {
+function Bookmarks() {
+  const dispatch = useAppDispatch();
   const {
-    friends: { searchWindowOpen },
     newJourney: { currentUser },
     bookMarks: { bookmarks },
   } = useAppSelector((state) => state);
 
-  return (
-    <Wrapper>
-      <AnimatePresence>
-        <All_AddUser_Button />
-      </AnimatePresence>
-      <AnimatePresence>{searchWindowOpen && <UserSearch />}</AnimatePresence>
+  let lastBookmarksBatchRef: any = useRef([]); //<=== had to use this because no matter
+  let lastVisibleBookmark: any = useRef([]); // < === how hard I tried with state i could not manage this
 
-      {/* 
-      <div className='img-container'>
-        <img
-          src='https://lh3.googleusercontent.com/a/ALm5wu20RKMcrCt6l1jyhWbMNm6lUYZJe_Rqyz8WDS8P0A=s96-c'
-          alt=''
-        />
+  // MAKE FIRST QUERRY =========
+
+  let getBookmarks = async () => {
+    const firstLoading = query(
+      collection(db, 'users', `${currentUser?.uid}`, 'bookmarks'),
+      orderBy('createdAt'),
+      limit(6)
+    );
+
+    const unsubscribe = onSnapshot(firstLoading, (querySnapshot) => {
+      const fetchedBookmarks: object[] = [];
+      querySnapshot.forEach((doc) => {
+        // console.log(doc.id, ' => ', doc.data());
+        let docId = doc.id;
+        const {
+          name,
+          displayName,
+          email,
+          latitude,
+          location_id,
+          longitude,
+          photo,
+          photoURL,
+          uid,
+        } = doc.data();
+        fetchedBookmarks.push({
+          name,
+          displayName,
+          docId,
+          email,
+          latitude,
+          location_id,
+          longitude,
+          photo,
+          photoURL,
+          uid,
+        });
+      });
+      // console.log('render');
+      lastBookmarksBatchRef.current = [...fetchedBookmarks];
+      dispatch(setBookmarks(fetchedBookmarks));
+      lastVisibleBookmark.current =
+        querySnapshot.docs[querySnapshot.docs.length - 1];
+
+      console.log(
+        'changed, now last visible is:',
+        lastBookmarksBatchRef.current
+      );
+    });
+  };
+
+  useEffect(() => {
+    getBookmarks();
+  }, []);
+
+  // ===================== ADDITIONAL BOOKMARKS' FETCH===========================================
+
+  let getAdditionalBookmark = async () => {
+    const followingLoadings = query(
+      collection(db, 'users', `${currentUser?.uid}`, 'bookmarks'),
+      orderBy('createdAt'),
+      startAfter(lastVisibleBookmark.current),
+      limit(6)
+    );
+
+    const querySnapshot = await getDocs(followingLoadings);
+    let newlyFetchedBookmarks: object[] = [];
+    querySnapshot.forEach((doc) => {
+      // console.log(doc.id, ' => ', doc.data());
+      let docId = doc.id;
+      const {
+        name,
+        displayName,
+        email,
+        latitude,
+        location_id,
+        longitude,
+        photo,
+        photoURL,
+        uid,
+      } = doc.data();
+      newlyFetchedBookmarks.push({
+        name,
+        displayName,
+        docId,
+        email,
+        latitude,
+        location_id,
+        longitude,
+        photo,
+        photoURL,
+        uid,
+      });
+    });
+
+    lastVisibleBookmark.current ===
+    querySnapshot.docs[querySnapshot.docs.length - 1]
+      ? console.log('old last bookmark')
+      : (lastVisibleBookmark.current =
+          querySnapshot.docs[querySnapshot.docs.length - 1]);
+
+    let filteredArray: object[] = [];
+
+    newlyFetchedBookmarks.map((newlyFetchedBookmark) => {
+      lastBookmarksBatchRef.current.map((bookmarkLastBatch: any) => {
+        newlyFetchedBookmark.docId !== bookmarkLastBatch.docId
+          ? filteredArray.push(newlyFetchedBookmark)
+          : console.log(newlyFetchedBookmark, 'already there');
+      });
+    });
+    dispatch(
+      setBookmarks([...lastBookmarksBatchRef.current, ...filteredArray])
+    );
+
+    // let bookmarksArray = [...lastBookmarksBatchRef.current, ...filteredArray];
+  };
+  // =========== scroll logic ===========
+
+  const scrollRef = useRef<HTMLDivElement | null>(null);
+
+  const handleScroll = (e: Event) => {
+    const target = e.target as HTMLDivElement;
+
+    if (target.scrollHeight - (target.scrollTop + window.innerHeight) < 100) {
+      console.log('load next batch');
+      getAdditionalBookmark();
+    }
+  };
+
+  useEffect(() => {
+    if (scrollRef.current !== null)
+      scrollRef.current.addEventListener('scroll', handleScroll);
+    return function () {
+      if (scrollRef.current !== null)
+        scrollRef.current.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+  // =========== scroll logic ===========
+
+  return (
+    <Wrapper ref={scrollRef} style={{ overflow: 'scroll' }}>
+      <div className='flex-container'>
+        {bookmarks?.map((bookmark) => (
+          <Bookmark key={bookmark.location_id} bookmark={bookmark}></Bookmark>
+        ))}
       </div>
-      <div className='img-container'>
-        <img
-          src='https://lh3.googleusercontent.com/a/ALm5wu20RKMcrCt6l1jyhWbMNm6lUYZJe_Rqyz8WDS8P0A=s96-c'
-          alt=''
-        />
-      </div>
-      <div className='img-container'>
-        <img
-          src='https://lh3.googleusercontent.com/a/ALm5wu20RKMcrCt6l1jyhWbMNm6lUYZJe_Rqyz8WDS8P0A=s96-c'
-          alt=''
-        />
-      </div>
-      <div className='img-container'>
-        <img
-          src='https://lh3.googleusercontent.com/a/ALm5wu20RKMcrCt6l1jyhWbMNm6lUYZJe_Rqyz8WDS8P0A=s96-c'
-          alt=''
-        />
-      </div>
-      <div className='img-container'>
-        <img
-          src='https://lh3.googleusercontent.com/a/ALm5wu20RKMcrCt6l1jyhWbMNm6lUYZJe_Rqyz8WDS8P0A=s96-c'
-          alt=''
-        />
-      </div>
-      <div className='img-container'>
-        <img
-          src='https://lh3.googleusercontent.com/a/ALm5wu20RKMcrCt6l1jyhWbMNm6lUYZJe_Rqyz8WDS8P0A=s96-c'
-          alt=''
-        />
-      </div>
-      <div className='img-container'>
-        <img
-          src='https://lh3.googleusercontent.com/a/ALm5wu20RKMcrCt6l1jyhWbMNm6lUYZJe_Rqyz8WDS8P0A=s96-c'
-          alt=''
-        />
-      </div>
-      <div className='img-container'>
-        <img
-          src='https://lh3.googleusercontent.com/a/ALm5wu20RKMcrCt6l1jyhWbMNm6lUYZJe_Rqyz8WDS8P0A=s96-c'
-          alt=''
-        />
-      </div>
-      <div className='img-container'>
-        <img
-          src='https://lh3.googleusercontent.com/a/ALm5wu20RKMcrCt6l1jyhWbMNm6lUYZJe_Rqyz8WDS8P0A=s96-c'
-          alt=''
-        />
-      </div>
-      <div className='img-container'>
-        <img
-          src='https://lh3.googleusercontent.com/a/ALm5wu20RKMcrCt6l1jyhWbMNm6lUYZJe_Rqyz8WDS8P0A=s96-c'
-          alt=''
-        />
-      </div>
-      <div className='img-container'>
-        <img
-          src='https://lh3.googleusercontent.com/a/ALm5wu20RKMcrCt6l1jyhWbMNm6lUYZJe_Rqyz8WDS8P0A=s96-c'
-          alt=''
-        />
-      </div>
-      <div className='img-container'>
-        <img
-          src='https://lh3.googleusercontent.com/a/ALm5wu20RKMcrCt6l1jyhWbMNm6lUYZJe_Rqyz8WDS8P0A=s96-c'
-          alt=''
-        />
-      </div>
-      <div className='img-container'>
-        <img
-          src='https://lh3.googleusercontent.com/a/ALm5wu20RKMcrCt6l1jyhWbMNm6lUYZJe_Rqyz8WDS8P0A=s96-c'
-          alt=''
-        />
-      </div> */}
+      {/* <h1>lol</h1>
+      <h1>lol</h1>
+      <h1>lol</h1>
+      <h1>lol</h1>
+      <h1>lol</h1>
+      <h1>lol</h1>
+      <h1>lol</h1>
+      <h1>lol</h1>
+      <h1>lol</h1>
+      <h1>lol</h1>
+      <h1>lol</h1>
+      <h1>lol</h1>
+      <h1>lol</h1>
+      <h1>lol</h1>
+      <h1>lol</h1>
+      <h1>lol</h1>
+      <h1>lol</h1>
+      <h1>lol</h1>
+      <h1>lol</h1>
+      <h1>lol</h1>
+      <h1>lol</h1> */}
     </Wrapper>
   );
 }
 
-export default FriendsScrollBar;
+export default Bookmarks;
 
 const Wrapper = styled.div`
-  overflow: scroll;
-  width: 90%;
-  display: flex;
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-  &::-webkit-scrollbar {
-    display: none;
-  }
+  background-color: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  height: 100vh;
+  width: 40vw;
+  border-radius: 3rem 0 0 3rem;
 
-  .img-container {
-    display: inline-block;
-    padding-left: 0.7rem;
-  }
-
-  img {
-    height: 64px;
-    border-radius: 50%;
+  .flex-container {
+    display: grid;
+    grid-template-columns: 50% 50%;
+    grid-gap: 1rem;
+    padding: 1rem;
+    margin-right: 1rem;
     cursor: pointer;
-
-    &:hover {
-      border: 1px solid black;
-    }
   }
 `;
-
-//   .all-users-placeholder-left {
-//     padding-left: 12px;
-//     width: 2rem;
-//     height: 4rem;
-//     background-color: rgba(0, 0, 0, 0.5);
-//     border-radius: 10rem 0 0 10rem;
-//     cursor: pointer;
-
-//     &:hover {
-//       background-color: rgba(0, 0, 0, 0.7);
-//     }
-
-//     h2 {
-//       font-family: var(--secondaryFont);
-//     }
-//   }
-
-//   .all-users-placeholder-right {
-//     /* display: flex;  */
-//     /* flex-direction: column;
-//     justify-content: center;
-//     align-items: center; */
-//     padding-right: 16px;
-//     width: 2rem;
-//     height: 4rem;
-//     background-color: rgba(0, 0, 0, 0.5);
-//     border-radius: 0 10rem 10rem 0;
-//     background-color: rgba(0, 0, 0, 0.5);
-//     cursor: pointer;
-
-//     &:hover {
-//       background-color: rgba(0, 0, 0, 0.7);
-//     }
-
-//     svg {
-//     }
-//   }

@@ -35,6 +35,8 @@ function HeroPage() {
           email,
           photoURL,
           uid,
+          friends: [uid],
+          detailedFriendsList: [],
         });
       };
       addUserToDb();

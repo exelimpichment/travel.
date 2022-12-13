@@ -1,10 +1,14 @@
 import styled from 'styled-components';
 import All_AddUser_Button from './All_AddUser_Button';
-import { HiOutlinePlusSm } from 'react-icons/hi';
 import UserSearch from './UserSearch';
 import { useAppSelector } from '../../hooks/reduxHooks';
 import { AnimatePresence, motion } from 'framer-motion';
 import { friendsPhotos } from '../../features/NewJourney/tempFriendsPhotos';
+import { useRef } from 'react';
+import {
+  BsFillArrowRightCircleFill,
+  BsFillArrowLeftCircleFill,
+} from 'react-icons/bs';
 
 function FriendsScrollBar() {
   const {
@@ -14,35 +18,38 @@ function FriendsScrollBar() {
   } = useAppSelector((state) => state);
 
   return (
-    <Wrapper>
-      <All_AddUser_Button />
-      <AnimatePresence>{searchWindowOpen && <UserSearch />}</AnimatePresence>
-      <AnimatePresence>
-        {friendsScrollBarOpen &&
-          friendsPhotos.map((friend) => (
-            <motion.div
-              className='img-container'
-              key={friend.id}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.4 }}
-              onClick={() => console.log('clicked photo')}
-            >
-              <img src={friend.img} alt={friend.name} />
-              <p className='username'>{friend.name}</p>
-            </motion.div>
-          ))}
-      </AnimatePresence>
-    </Wrapper>
+    <>
+      <Wrapper>
+        <All_AddUser_Button />
+        <AnimatePresence>{searchWindowOpen && <UserSearch />}</AnimatePresence>
+        <AnimatePresence>
+          {friendsScrollBarOpen &&
+            friendsPhotos.map((friend) => (
+              <motion.div
+                className='img-container'
+                key={friend.id}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.4 }}
+                onClick={() => console.log('clicked photo')}
+              >
+                <img src={friend.img} alt={friend.name} />
+                <p className='username'>{friend.name}</p>
+              </motion.div>
+            ))}
+        </AnimatePresence>
+      </Wrapper>
+    </>
   );
 }
 
 export default FriendsScrollBar;
 
 const Wrapper = styled.div`
+  /* z-index: 2; */
   overflow: scroll;
-  width: 90%;
+  width: 85%;
   display: flex;
   -ms-overflow-style: none;
   scrollbar-width: none;
