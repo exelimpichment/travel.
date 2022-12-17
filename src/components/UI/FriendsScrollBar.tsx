@@ -1,21 +1,52 @@
 import styled from 'styled-components';
 import All_AddUser_Button from './All_AddUser_Button';
 import UserSearch from './UserSearch';
-import { useAppSelector } from '../../hooks/reduxHooks';
+import { useAppDispatch, useAppSelector } from '../../hooks/reduxHooks';
 import { AnimatePresence, motion } from 'framer-motion';
 import { friendsPhotos } from '../../features/NewJourney/tempFriendsPhotos';
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import {
   BsFillArrowRightCircleFill,
   BsFillArrowLeftCircleFill,
 } from 'react-icons/bs';
+import { doc, onSnapshot } from 'firebase/firestore';
+import { db } from '../../firebase/firebaseConfig';
+import { setFriends } from '../../features/Friends/FriendsSlice';
+
+interface IDetailedFriend {
+  displayName: string;
+  email: string;
+  photoURL: string;
+  uid: string;
+}
 
 function FriendsScrollBar() {
+  const dispatch = useAppDispatch();
   const {
-    friends: { searchWindowOpen, friendsScrollBarOpen },
+    friends: { searchWindowOpen, friendsScrollBarOpen, friends },
     newJourney: { currentUser },
     bookMarks: { bookmarks },
   } = useAppSelector((state) => state);
+
+  useEffect(() => {
+    try {
+      const unsub = onSnapshot(
+        doc(db, 'users', `${currentUser?.uid}`),
+        (doc) => {
+          const data = doc.data();
+          console.log(data);
+          dispatch(setFriends(data));
+        }
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+
+  // email(pin):"exelimpichment2@gmail.com"
+  // displayName(pin):"Natan Hopkin"
+  // uid(pin):"nsidPuwRICdck5LhWHg9WBg0Z383"
+  // photoURL(pin):"https://lh3.googleusercontent.com/a/ALm5wu34ORKEcQBP03lI-0T03Up7hn31NxCVkxU7Li4z=s96-c"
 
   return (
     <>
@@ -47,7 +78,9 @@ function FriendsScrollBar() {
 export default FriendsScrollBar;
 
 const Wrapper = styled.div`
+  min-height: 80px;
   /* z-index: 2; */
+  /* margin-bottom: 3rem; */
   overflow: scroll;
   width: 85%;
   display: flex;

@@ -9,6 +9,7 @@ import {
   setSearchedFriend,
   setUserSearch,
 } from '../../features/Friends/FriendsSlice';
+import { toast } from 'react-toastify';
 
 function UserSearch() {
   const dispatch = useAppDispatch();
@@ -18,17 +19,20 @@ function UserSearch() {
   } = useAppSelector((state) => state);
 
   const searchFriend = (e: React.FormEvent) => {
-    e.preventDefault();
-
+    // e.preventDefault();
     const getData = async () => {
       const userRef = collection(db, 'users');
       const q = query(userRef, where('email', '==', `${userSearch}`));
       const querySnapshot = await getDocs(q);
-      let user = {};
+      let user;
       querySnapshot.forEach((doc) => {
         user = { ...doc.data(), docId: doc.id };
       });
-      dispatch(setSearchedFriend(user));
+      user
+        ? dispatch(setSearchedFriend(user))
+        : toast.warning('No User found', {
+            position: toast.POSITION.BOTTOM_RIGHT,
+          });
     };
     getData();
 

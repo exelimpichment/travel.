@@ -8,8 +8,8 @@ import { GoSignOut } from 'react-icons/go';
 interface ILink {
   id: number;
   text: string;
-  path: string;
-  icon: JSX.Element;
+  path?: string;
+  icon?: JSX.Element;
 }
 
 const links: ILink[] = [
@@ -32,17 +32,21 @@ const links: ILink[] = [
     icon: <BsFillBookmarkHeartFill />,
   },
 
-  {
-    id: 4,
-    text: 'Music',
-    path: '/music-player',
-    icon: <BsMusicNote />,
-  },
+  // {
+  //   id: 4,
+  //   text: 'Music',
+  //   path: '/music-player',
+  //   icon: <BsMusicNote />,
+  // },
   {
     id: 5,
     text: 'SignOut',
     path: '/',
     icon: <GoSignOut />,
+  },
+  {
+    id: 6,
+    text: 'User',
   },
 ];
 

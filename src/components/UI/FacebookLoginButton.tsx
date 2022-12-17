@@ -30,7 +30,10 @@ function FacebookLoginButton() {
   };
 
   return (
-    <Wrapper type='button' onClick={handleSignIn}>
+    <Wrapper
+      type='button'
+      //  onClick={handleSignIn}
+    >
       <div className='g-sign-in-button'>
         <div className='content-wrapper'>
           <div className='logo-wrapper'>

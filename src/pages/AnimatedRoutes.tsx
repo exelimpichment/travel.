@@ -26,7 +26,7 @@ function AnimatedRoutes() {
           <Route path='friends' element={<Friends />} />
           <Route path='bookmarks' element={<Bookmarks />} />
         </Route>
-        <Route path='/music-player' element={<MusicPlayer />} />
+        {/* <Route path='/music-player' element={<MusicPlayer />} /> */}
         <Route path='*' element={<Error />} />
       </Routes>
     </AnimatePresence>

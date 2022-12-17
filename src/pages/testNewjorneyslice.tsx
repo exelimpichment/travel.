@@ -7,7 +7,7 @@ import FacebookLoginButton from '../components/UI/FacebookLoginButton';
 import { AnimatePresence } from 'framer-motion';
 import { useAuthState, auth } from '../firebase/firebaseConfig';
 import { motion } from 'framer-motion';
-import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks';
+import { useAppDispatch } from '../hooks/reduxHooks';
 import { setCurrentUser, User } from '../features/NewJourney/NewJourneySlice';
 import {
   collectionGroup,
@@ -16,25 +16,15 @@ import {
   setDoc,
   getDocs,
   where,
-  updateDoc,
-  arrayUnion,
-  getDoc,
 } from 'firebase/firestore';
+
 import { db } from '../firebase/firebaseConfig';
-import { toast } from 'react-toastify';
 
 function HeroPage() {
   const dispatch = useAppDispatch();
   const [user, loading, error] = useAuthState(auth);
   console.log({ user }, { loading }, { error });
 
-  const {
-    friends: { searchWindowOpen, friendsScrollBarOpen, friends },
-    newJourney: { currentUser },
-    bookMarks: { bookmarks },
-  } = useAppSelector((state) => state);
-
-  // ======== INITIATES USER ========
   useEffect(() => {
     if (user) {
       const { displayName, email, photoURL, uid } = user;
@@ -45,6 +35,8 @@ function HeroPage() {
           email,
           photoURL,
           uid,
+          friends: [uid],
+          detailedFriendsList: [],
         });
       };
       addUserToDb();
@@ -52,53 +44,6 @@ function HeroPage() {
       console.log('no user');
     }
   }, [user]);
-
-  useEffect(() => {
-    console.log('tostify');
-
-    user !== null && toast.success('You are logged in');
-  }, [user]);
-  //  ====== INITIATE FRIENDS ARRAY =====
-
-  const initiateFriendsArr = async () => {
-    // checks if document exist ==================
-    if (user) {
-      const docRef = doc(
-        db,
-        'users',
-        `${currentUser?.uid}`,
-        'userFriends',
-        'detailedUsersList'
-      );
-      const docSnap = await getDoc(docRef);
-
-      if (docSnap.exists()) {
-        console.log('Document data:', docSnap.data());
-      } else {
-        // ADDS DOCUMENT IF IT DOES NOT EXIST  ========================
-        console.log('No such document!');
-        await setDoc(
-          doc(
-            db,
-            'users',
-            `${currentUser?.uid}`,
-            'userFriends',
-            'detailedUsersList'
-          ),
-          {
-            detailedFriends: [],
-            friendsList: [],
-          }
-        );
-
-        console.log('document added');
-      }
-    }
-  };
-
-  useEffect(() => {
-    currentUser !== null && initiateFriendsArr();
-  }, [currentUser]);
 
   // useEffect(() => {
   //   console.log('1');
@@ -117,6 +62,8 @@ function HeroPage() {
   //   getBookmarks();
   //   console.log('5');
   // }, []);
+
+  const [toggleNavbarOpen, setToggleNavbarOpen] = useState(false);
 
   return (
     <Wrapper>

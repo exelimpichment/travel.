@@ -33,6 +33,7 @@ import {
   setDocIdObject,
   setLocationIdArr,
 } from '../../features/NewJourney/NewJourneySlice';
+import { toast } from 'react-toastify';
 
 function AttractionCarousel() {
   const dispatch = useAppDispatch();
@@ -158,8 +159,9 @@ function AttractionCarousel() {
               type='button'
               onClick={
                 currentUser === null
-                  ? () => {
-                      console.log('no user. please offer to login');
+                  ? (e) => {
+                      e.stopPropagation();
+                      toast.info('You have to log in');
                     }
                   : (event) => {
                       event.stopPropagation();

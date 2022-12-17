@@ -26,6 +26,13 @@ function SearchedFriend() {
         dispatch(setFriendsScrollBarOpen());
       }, 600);
     //  ======= ADDING FRIEND TO MY LIST ========
+    // doc(
+    //           db,
+    //           'users',
+    //           `${currentUser?.uid}`,
+    //           'userFriends',
+    //           'detailedUsersList'
+    //           ),
 
     if (searchedFriend !== null) {
       let tempFriend: IFriend = {
@@ -35,12 +42,30 @@ function SearchedFriend() {
         displayName: searchedFriend.displayName,
       };
 
-      await updateDoc(doc(db, 'users', `${currentUser?.uid}`), {
-        friends: arrayUnion(searchedFriend.uid),
-      });
-      await updateDoc(doc(db, 'users', `${currentUser?.uid}`), {
-        detailedFriendsList: arrayUnion(tempFriend),
-      });
+      await updateDoc(
+        doc(
+          db,
+          'users',
+          `${currentUser?.uid}`,
+          'userFriends',
+          'detailedUsersList'
+        ),
+        {
+          friendsList: arrayUnion(searchedFriend.uid),
+        }
+      );
+      await updateDoc(
+        doc(
+          db,
+          'users',
+          `${currentUser?.uid}`,
+          'userFriends',
+          'detailedUsersList'
+        ),
+        {
+          detailedFriends: arrayUnion(tempFriend),
+        }
+      );
     }
 
     //  ======= ADDING ME TO FRIEND LIST ========
@@ -53,19 +78,37 @@ function SearchedFriend() {
         displayName: currentUser.displayName,
       };
 
-      await updateDoc(doc(db, 'users', `${searchedFriend.uid}`), {
-        friends: arrayUnion(currentUser?.uid),
-      });
-      await updateDoc(doc(db, 'users', `${searchedFriend.uid}`), {
-        detailedFriendsList: arrayUnion(tempCurrentUser),
-      });
+      await updateDoc(
+        doc(
+          db,
+          'users',
+          `${searchedFriend.uid}`,
+          'userFriends',
+          'detailedUsersList'
+        ),
+        {
+          friends: arrayUnion(currentUser?.uid),
+        }
+      );
+      await updateDoc(
+        doc(
+          db,
+          'users',
+          `${searchedFriend.uid}`,
+          'userFriends',
+          'detailedUsersList'
+        ),
+        {
+          detailedFriendsList: arrayUnion(tempCurrentUser),
+        }
+      );
     }
   };
 
   return (
     <Wrapper
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
+      initial={{ opacity: 0, y: -70 }}
+      animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0 }}
     >
       <div className='user-container'>
@@ -87,14 +130,17 @@ function SearchedFriend() {
 export default SearchedFriend;
 
 const Wrapper = styled(motion.div)`
+  position: absolute;
+  top: 90px;
   width: 85%;
   height: 64px;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0);
   border-top-left-radius: 32px 32px;
   border-bottom-left-radius: 32px 32px;
   border-top-right-radius: 32px 32px;
   border-bottom-right-radius: 32px 32px;
-  margin-top: 0.5rem;
+  /* margin-top: -5px; */
+
   /* padding: 2px 10px 2px 0px; */
 
   .btn-container {

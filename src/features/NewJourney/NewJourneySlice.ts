@@ -121,7 +121,7 @@ const initialState: AttractionsState = {
   elementRef: [],
   activeAttraction: null,
   allPlacesShown: true,
-  currentUser: tempUser,
+  currentUser: null,
   childClicked: null,
   // attractions: undefined,
   docIdObject: null,

@@ -11,75 +11,96 @@ import {
   setToggleNavbarOpen,
 } from '../features/NewJourney/NewJourneySlice';
 import { redirect } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 function NavigationBar2() {
   const {
-    newJourney: { toggleNavbarOpen },
+    newJourney: { toggleNavbarOpen, currentUser },
   } = useAppSelector((state) => state);
-  // const [toggleNavbarOpen, setToggleNavbarOpen] = useState(false);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+
+  const signOut = () => {
+    handleSignOut();
+    toast.info('You are logged out');
+    console.log('log out');
+    dispatch(setCurrentUser(null));
+  };
+
   return (
-    <>
-      <button
-        style={{ position: 'absolute', top: 140, left: 3, zIndex: '999' }}
-        type='button'
-        onClick={() => {
-          handleSignOut();
-          // dispatch(setCurrentUser(null));
-        }}
-      >
-        sign out
-      </button>
-      <Wrapper>
-        <div className='navbar-container'>
-          {/* =========TOGGLE_BUTTON====== */}
-          <motion.button
-            key='navBar'
-            whileHover={{ scale: 1.1 }}
-            type='button'
-            className='menuToggle'
-            onClick={() => dispatch(setToggleNavbarOpen('toggle'))}
-          >
-            <GiMountains></GiMountains>
-          </motion.button>
-          {/* =========TOGGLE_BUTTON====== */}
+    <Wrapper>
+      <div className='navbar-container'>
+        {/* =========TOGGLE_BUTTON====== */}
+        <motion.button
+          key='navBar'
+          whileHover={{ scale: 1.1 }}
+          type='button'
+          className='menuToggle'
+          onClick={() => dispatch(setToggleNavbarOpen('toggle'))}
+        >
+          <GiMountains></GiMountains>
+        </motion.button>
+        {/* =========TOGGLE_BUTTON====== */}
 
-          <div className='links-container'>
-            <AnimatePresence>
-              {toggleNavbarOpen &&
-                links.map((link) => {
-                  return (
-                    <motion.div
-                      key={link.id}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      transition={{ duration: 0.45 }}
+        <div className='links-container'>
+          <AnimatePresence>
+            {toggleNavbarOpen &&
+              links.map((link) => {
+                return (
+                  <motion.div
+                    key={link.id}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.45 }}
+                  >
+                    <button
+                      onClick={() => {
+                        dispatch(setToggleNavbarOpen('toggle'));
+                        link.text === 'SignOut' ? signOut() : null;
+                        if (link.path) navigate(link.path);
+                      }}
+                      type='button'
+                      className='link'
+                      style={{
+                        display:
+                          link.text === 'User' && currentUser === null
+                            ? 'none'
+                            : 'default',
+                      }}
                     >
-                      <button
-                        onClick={() => {
-                          dispatch(setToggleNavbarOpen('toggle'));
-
-                          navigate(link.path);
+                      <div
+                        style={{
+                          display: link.text === 'User' ? 'flex' : 'block',
+                          cursor: link.text === 'User' ? 'default' : 'pointer',
+                          transform:
+                            link.text === 'SignOut'
+                              ? 'translateY(3px) translateX(3px)'
+                              : 'translateY(0px) translateX(0px)',
                         }}
-                        type='button'
-                        className='link'
                       >
-                        <>{link.icon}</>
-                      </button>
-                    </motion.div>
-                  );
-                })}
-            </AnimatePresence>
-          </div>
-
-          {/* ================================================================ */}
-
-          {/* ================================================================ */}
+                        {link.path ? (
+                          link.icon
+                        ) : (
+                          <img
+                            src={currentUser?.photoURL}
+                            alt={currentUser?.displayName}
+                          />
+                        )}
+                        {/* (link.path ? <div>lol</div> : <div>lol2</div>) */}
+                      </div>
+                    </button>
+                  </motion.div>
+                );
+              })}
+          </AnimatePresence>
         </div>
-      </Wrapper>
-    </>
+
+        {/* ================================================================ */}
+
+        {/* ================================================================ */}
+      </div>
+    </Wrapper>
   );
 }
 
@@ -128,5 +149,14 @@ const Wrapper = styled.div`
     svg {
       font-size: 2rem;
     }
+  }
+
+  img {
+    height: 3rem;
+    border-radius: 50%;
+  }
+
+  .test {
+    display: flex;
   }
 `;

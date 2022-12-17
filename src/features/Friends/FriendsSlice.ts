@@ -15,6 +15,8 @@ interface FriendsState {
   friendsScrollBarOpen: boolean;
   userSearch: string;
   searchedFriend: IFriend | null;
+  friends: IFriend[] | [];
+  // feedMoved: boolean;
 }
 
 const initialState: FriendsState = {
@@ -22,6 +24,8 @@ const initialState: FriendsState = {
   friendsScrollBarOpen: true,
   userSearch: '',
   searchedFriend: null,
+  friends: [],
+  // feedMoved: false,
 };
 
 export const friendsSlice = createSlice({
@@ -40,6 +44,12 @@ export const friendsSlice = createSlice({
     setSearchedFriend: (state, action) => {
       state.searchedFriend = action.payload;
     },
+    setFriends: (state, action) => {
+      state.friends = { ...state.friends, ...action.payload };
+    },
+    // setFeedMoved: (state) => {
+    //   state.feedMoved = !state.feedMoved;
+    // },
   },
 });
 
@@ -48,6 +58,7 @@ export const {
   setFriendsScrollBarOpen,
   setUserSearch,
   setSearchedFriend,
+  setFriends,
 } = friendsSlice.actions;
 
 // export const selectBookmarks = (state: RootState) => state.bookMarks.test;
