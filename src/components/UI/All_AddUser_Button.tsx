@@ -7,6 +7,7 @@ import {
 } from '../../features/Friends/FriendsSlice';
 import { motion } from 'framer-motion';
 import { useAppDispatch, useAppSelector } from '../../hooks/reduxHooks';
+import { toast } from 'react-toastify';
 
 function All_AddUser_Button() {
   const dispatch = useAppDispatch();
@@ -40,7 +41,13 @@ function All_AddUser_Button() {
 
       <div
         className='all-users-placeholder-right'
-        onClick={() => swapScrollbarSearch()}
+        onClick={() => {
+          currentUser
+            ? swapScrollbarSearch()
+            : toast.info('You have to log in', {
+                position: toast.POSITION.BOTTOM_RIGHT,
+              });
+        }}
       >
         <HiOutlinePlusSm
           style={

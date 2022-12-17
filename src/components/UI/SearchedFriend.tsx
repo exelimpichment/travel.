@@ -26,13 +26,6 @@ function SearchedFriend() {
         dispatch(setFriendsScrollBarOpen());
       }, 600);
     //  ======= ADDING FRIEND TO MY LIST ========
-    // doc(
-    //           db,
-    //           'users',
-    //           `${currentUser?.uid}`,
-    //           'userFriends',
-    //           'detailedUsersList'
-    //           ),
 
     if (searchedFriend !== null) {
       let tempFriend: IFriend = {
@@ -87,7 +80,7 @@ function SearchedFriend() {
           'detailedUsersList'
         ),
         {
-          friends: arrayUnion(currentUser?.uid),
+          friendsList: arrayUnion(currentUser?.uid),
         }
       );
       await updateDoc(
@@ -99,7 +92,7 @@ function SearchedFriend() {
           'detailedUsersList'
         ),
         {
-          detailedFriendsList: arrayUnion(tempCurrentUser),
+          detailedFriends: arrayUnion(tempCurrentUser),
         }
       );
     }

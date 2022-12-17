@@ -8,10 +8,15 @@ import { useNavigate, Link } from 'react-router-dom';
 import { GiMountains } from 'react-icons/gi';
 import {
   setCurrentUser,
+  setDocIdObject,
   setToggleNavbarOpen,
 } from '../features/NewJourney/NewJourneySlice';
 import { redirect } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import {
+  setDetailedFriends,
+  setFriends,
+} from '../features/Friends/FriendsSlice';
 
 function NavigationBar2() {
   const {
@@ -25,6 +30,9 @@ function NavigationBar2() {
     toast.info('You are logged out');
     console.log('log out');
     dispatch(setCurrentUser(null));
+    dispatch(setFriends([]));
+    dispatch(setDetailedFriends([]));
+    dispatch(setDocIdObject(null));
   };
 
   return (

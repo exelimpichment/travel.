@@ -161,7 +161,9 @@ function AttractionCarousel() {
                 currentUser === null
                   ? (e) => {
                       e.stopPropagation();
-                      toast.info('You have to log in');
+                      toast.info('You have to log in', {
+                        position: toast.POSITION.BOTTOM_RIGHT,
+                      });
                     }
                   : (event) => {
                       event.stopPropagation();

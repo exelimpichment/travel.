@@ -9,28 +9,9 @@ function FriendsFeed() {
     friends: { searchedFriend },
   } = useAppSelector((state) => state);
 
-  // const tempMove = () => {
-  //   setPixel(74);
-  // };
-  // console.log(`translateY(${pixel})`);
-
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     setMovedPosition(!movedPosition);
-  //   }, 1300);
-  // }, [searchedFriend]);
-
   return (
-    <Wrapper
-    // style={{ height: 'calc(10px + 100px)' }}
-    // style={{
-    //   transform: feedMoved ? `translateY(74px)` : `translateY(0px)`,
-    //   transition: 'all 0.3s linear',
-    // }}
-    >
-      {/* <button type='button' onClick={tempMove}>
-        click
-      </button> */}
+    <Wrapper>
+      {/* <h1>lol</h1>
       <h1>lol</h1>
       <h1>lol</h1>
       <h1>lol</h1>
@@ -49,8 +30,10 @@ function FriendsFeed() {
       <h1>lol</h1>
       <h1>lol</h1>
       <h1>lol</h1>
-      <h1>lol</h1>
-      <h1>lol</h1>
+      <h1>lol</h1> */}
+      <div className='empty-feed-container'>
+        <h1 className='empty-feed'>Your feed is empty</h1>
+      </div>
     </Wrapper>
   );
 }
@@ -58,14 +41,19 @@ function FriendsFeed() {
 export default FriendsFeed;
 
 const Wrapper = styled(motion.div)`
-  background: #46bcec;
   overflow: scroll;
   width: 85%;
   display: flex;
   flex-direction: column;
   opacity: 1;
 
-  h1 {
-    background-color: red;
+  .empty-feed-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .empty-feed {
+    font-family: var(--secondaryFont);
+    color: rgba(0, 0, 0, 0.5);
   }
 `;

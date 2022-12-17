@@ -11,7 +11,10 @@ import {
 } from 'react-icons/bs';
 import { doc, onSnapshot } from 'firebase/firestore';
 import { db } from '../../firebase/firebaseConfig';
-import { setFriends } from '../../features/Friends/FriendsSlice';
+import {
+  setDetailedFriends,
+  setFriends,
+} from '../../features/Friends/FriendsSlice';
 
 interface IDetailedFriend {
   displayName: string;
@@ -23,7 +26,12 @@ interface IDetailedFriend {
 function FriendsScrollBar() {
   const dispatch = useAppDispatch();
   const {
-    friends: { searchWindowOpen, friendsScrollBarOpen, friends },
+    friends: {
+      searchWindowOpen,
+      friendsScrollBarOpen,
+      friends,
+      detailedFriends,
+    },
     newJourney: { currentUser },
     bookMarks: { bookmarks },
   } = useAppSelector((state) => state);
@@ -31,11 +39,20 @@ function FriendsScrollBar() {
   useEffect(() => {
     try {
       const unsub = onSnapshot(
-        doc(db, 'users', `${currentUser?.uid}`),
+        doc(
+          db,
+          'users',
+          `${currentUser?.uid}`,
+          'userFriends',
+          'detailedUsersList'
+        ),
         (doc) => {
-          const data = doc.data();
-          console.log(data);
-          dispatch(setFriends(data));
+          const data: any = doc.data();
+          if (data) {
+            console.log(data);
+            dispatch(setDetailedFriends(data.detailedFriends));
+            dispatch(setFriends(data.friendsList));
+          }
         }
       );
     } catch (error) {
@@ -43,30 +60,28 @@ function FriendsScrollBar() {
     }
   }, []);
 
-  // email(pin):"exelimpichment2@gmail.com"
-  // displayName(pin):"Natan Hopkin"
-  // uid(pin):"nsidPuwRICdck5LhWHg9WBg0Z383"
-  // photoURL(pin):"https://lh3.googleusercontent.com/a/ALm5wu34ORKEcQBP03lI-0T03Up7hn31NxCVkxU7Li4z=s96-c"
-
   return (
     <>
       <Wrapper>
         <All_AddUser_Button />
         <AnimatePresence>{searchWindowOpen && <UserSearch />}</AnimatePresence>
         <AnimatePresence>
-          {friendsScrollBarOpen &&
-            friendsPhotos.map((friend) => (
+          {detailedFriends &&
+            detailedFriends.map((detailedFriend) => (
               <motion.div
                 className='img-container'
-                key={friend.id}
+                key={detailedFriend.uid}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.4 }}
                 onClick={() => console.log('clicked photo')}
               >
-                <img src={friend.img} alt={friend.name} />
-                <p className='username'>{friend.name}</p>
+                <img
+                  src={detailedFriend.photoURL}
+                  alt={detailedFriend.displayName}
+                />
+                <p className='username'>{detailedFriend.displayName}</p>
               </motion.div>
             ))}
         </AnimatePresence>
@@ -99,7 +114,8 @@ const Wrapper = styled.div`
 
     .username {
       /* color: red; */
-      font-size: 0.8rem;
+      margin-top: 5px;
+      font-size: 0.85rem;
       font-weight: 300;
       font-style: italic;
       font-family: var(--secondaryFont);
