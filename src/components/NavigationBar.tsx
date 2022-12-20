@@ -16,6 +16,7 @@ import { toast } from 'react-toastify';
 import {
   setDetailedFriends,
   setFriends,
+  setFriendsScrollBarOpen,
 } from '../features/Friends/FriendsSlice';
 
 function NavigationBar2() {
@@ -33,6 +34,7 @@ function NavigationBar2() {
     dispatch(setFriends([]));
     dispatch(setDetailedFriends([]));
     dispatch(setDocIdObject(null));
+    // dispatch(setFriendsScrollBarOpen());
   };
 
   return (

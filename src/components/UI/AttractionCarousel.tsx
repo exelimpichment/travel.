@@ -46,6 +46,7 @@ function AttractionCarousel() {
   };
 
   const {
+    friends: { friends },
     newJourney: {
       attractions,
       currentUser,
@@ -122,6 +123,16 @@ function AttractionCarousel() {
 
   //   dispatch(setElementRef(refs));
   // }, [attractions]);
+  interface IFeedItem extends Bookmark {
+    friends: string[];
+  }
+
+  const addToFeed = async (feedItem: IFeedItem) => {
+    const docRef = await addDoc(collection(db, 'feed'), {
+      ...feedItem,
+    });
+    console.log('Document written with ID: ', docRef.id);
+  };
 
   return (
     <Wrapper>
@@ -159,8 +170,8 @@ function AttractionCarousel() {
               type='button'
               onClick={
                 currentUser === null
-                  ? (e) => {
-                      e.stopPropagation();
+                  ? (event) => {
+                      event.stopPropagation();
                       toast.info('You have to log in', {
                         position: toast.POSITION.BOTTOM_RIGHT,
                       });
@@ -187,6 +198,19 @@ function AttractionCarousel() {
                           photoURL: currentUser?.photoURL,
                           uid: currentUser?.uid,
                           createdAt: serverTimestamp(),
+                        });
+                        addToFeed({
+                          name: attraction.name,
+                          location_id: attraction.location_id,
+                          photo: attraction.photo.images.original.url,
+                          latitude: attraction.latitude,
+                          longitude: attraction.longitude,
+                          displayName: currentUser?.displayName,
+                          email: currentUser?.email,
+                          photoURL: currentUser?.photoURL,
+                          uid: currentUser?.uid,
+                          createdAt: serverTimestamp(),
+                          friends: friends,
                         });
                       }
                     }

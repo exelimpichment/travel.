@@ -66,8 +66,8 @@ function FriendsScrollBar() {
         <All_AddUser_Button />
         <AnimatePresence>{searchWindowOpen && <UserSearch />}</AnimatePresence>
         <AnimatePresence>
-          {detailedFriends &&
-            detailedFriends.map((detailedFriend) => (
+          {friendsScrollBarOpen &&
+            detailedFriends?.map((detailedFriend) => (
               <motion.div
                 className='img-container'
                 key={detailedFriend.uid}
@@ -114,6 +114,7 @@ const Wrapper = styled.div`
 
     .username {
       /* color: red; */
+      height: 1.3rem;
       margin-top: 5px;
       font-size: 0.85rem;
       font-weight: 300;

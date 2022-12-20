@@ -174,10 +174,10 @@ const Wrapper = styled.div`
     // this might be a reason
   }
 
-  .attraction-section {
+  /* .attraction-section {
     background-color: white;
-    height: 100vh;
-  }
+    max-height: 90vh;
+  } */
 
   @media (min-width: 490px) {
     background-color: #fff;
@@ -197,10 +197,10 @@ const Wrapper = styled.div`
       border-style: 12px black solid;
     }
 
-    .attraction-section {
+    /* .attraction-section {
       overflow: hidden;
       background-color: transparent;
       height: 100vh;
-    }
+    } */
   }
 `;

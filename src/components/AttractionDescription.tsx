@@ -24,12 +24,9 @@ function AttractionDescription() {
 export default AttractionDescription;
 
 const Wrapper = styled.div`
-  /* margin-top: 5rem; */
-  /* padding-top: 1rem; */
   display: flex;
   transition: all 0.3 ease;
   overflow: hidden;
-  /* max-height: 15%; */
   justify-content: center;
   align-items: center;
   padding: 0 15px 0 15px;
