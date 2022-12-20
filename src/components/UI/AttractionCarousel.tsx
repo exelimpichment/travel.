@@ -125,6 +125,7 @@ function AttractionCarousel() {
   // }, [attractions]);
   interface IFeedItem extends Bookmark {
     friends: string[];
+    likes: string[];
   }
 
   const addToFeed = async (feedItem: IFeedItem) => {
@@ -211,6 +212,7 @@ function AttractionCarousel() {
                           uid: currentUser?.uid,
                           createdAt: serverTimestamp(),
                           friends: friends,
+                          likes: [],
                         });
                       }
                     }

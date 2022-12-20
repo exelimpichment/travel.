@@ -4,7 +4,9 @@ import { AiOutlineHeart, AiFillHeart } from 'react-icons/ai';
 import { FiSend } from 'react-icons/fi';
 import { BiComment } from 'react-icons/bi';
 import { setFeedItemCommentsOpened } from '../features/Friends/FriendsSlice';
-import { useAppDispatch } from '../hooks/reduxHooks';
+import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks';
+import { AnimatePresence, motion } from 'framer-motion';
+import { FaRegTimesCircle } from 'react-icons/fa';
 
 let url =
   'https://lh3.googleusercontent.com/a/AEdFTp6HvOp_KL1jZt4i6zSWZQpnrhtdNOsLAPpjUejc=s96-c';
@@ -14,6 +16,11 @@ let attrectionUrl =
   'https://media-cdn.tripadvisor.com/media/photo-m/1280/13/4d/ad/bb/old-market-square.jpg';
 
 function FeedItem() {
+  const [toggle, setToggle] = useState(false);
+  const {
+    // newJourney: { currentUser },
+    friends: { feedItemCommentsOpened },
+  } = useAppSelector((state) => state);
   const dispatch = useAppDispatch();
   return (
     <Wrapper>
@@ -33,16 +40,32 @@ function FeedItem() {
           <button
             className='comments flex-container'
             type='button'
-            onClick={() => {
-              dispatch(setFeedItemCommentsOpened());
-            }}
+            onClick={() => setToggle(!toggle)}
           >
             <BiComment />
             <p className='counter'>3</p>
           </button>
         </div>
         {/* ===========COMMENTS SECTION======================= */}
-        <CommentsWrapper>fdmfdmf</CommentsWrapper>
+        <AnimatePresence>
+          {toggle && (
+            <CommentsWrapper
+              initial={{ opacity: 0, height: '1%' }}
+              animate={{ opacity: 1, height: '100%' }}
+              exit={{ opacity: 0, height: '1%' }}
+              transition={{ ease: 'easeOut', duration: 0.4 }}
+            >
+              <div className='comments-section'></div>
+              <button
+                type='button'
+                className='escapeButton'
+                onClick={() => setToggle(!toggle)}
+              >
+                <FaRegTimesCircle />
+              </button>
+            </CommentsWrapper>
+          )}
+        </AnimatePresence>
       </div>
       {/* =========3/3================================ */}
 
@@ -62,9 +85,21 @@ function FeedItem() {
 
 export default FeedItem;
 
-const CommentsWrapper = styled.div`
+const CommentsWrapper = styled(motion.div)`
+  position: absolute;
   height: 100%;
-  background-color: red;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  bottom: 0;
+  left: 0;
+
+  svg {
+    font-size: 1.5rem;
+    &:hover {
+      color: #46bcec;
+      transition: all 0.3s ease-in-out;
+    }
+  }
 `;
 
 const Wrapper = styled.div`
@@ -118,8 +153,19 @@ const Wrapper = styled.div`
       bottom: 5px;
       left: 5px;
 
+      .likes {
+        &:hover {
+          color: #bf2e44;
+          transition: all 0.3s ease-in-out;
+        }
+      }
+
       .comments {
         margin-left: 0.5rem;
+        &:hover {
+          color: #46bcec;
+          transition: all 0.3s ease-in-out;
+        }
       }
 
       .flex-container {
