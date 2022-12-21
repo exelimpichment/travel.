@@ -7,62 +7,118 @@ import { setFeedItemCommentsOpened } from '../features/Friends/FriendsSlice';
 import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks';
 import { AnimatePresence, motion } from 'framer-motion';
 import { FaRegTimesCircle } from 'react-icons/fa';
+import { arrayUnion, doc, updateDoc } from 'firebase/firestore';
+import { db } from '../firebase/firebaseConfig';
 
-let url =
-  'https://lh3.googleusercontent.com/a/AEdFTp6HvOp_KL1jZt4i6zSWZQpnrhtdNOsLAPpjUejc=s96-c';
-let displayName = 'EX`EL community';
+interface IInputValue {
+  inputValue: string;
+  docID: string;
+  photoURL: string;
+  displayName: string;
+  uid: string;
+}
 
-let attrectionUrl =
-  'https://media-cdn.tripadvisor.com/media/photo-m/1280/13/4d/ad/bb/old-market-square.jpg';
+function FeedItem({ ...friend }) {
+  const {
+    friend: {
+      displayName,
+      docID,
+      email,
+      friends,
+      latitude,
+      likes,
+      location_id,
+      longitude,
+      name,
+      photo,
+      photoURL,
+      uid,
+      comments,
+    },
+  } = friend;
+  // console.log(
+  //   displayName,
+  //   docID,
+  //   email,
+  //   friends,
+  //   latitude,
+  //   likes,
+  //   location_id,
+  //   longitude,
+  //   name,
+  //   photo,
+  //   photoURL,
+  //   uid
+  // );
+  console.log(comments);
 
-function FeedItem() {
-  const [toggle, setToggle] = useState(false);
+  const [toggleComment, setToggleComment] = useState(false);
+  const [inputValue, setInputValue] = useState('');
+  const [commentsUpdated, setCommentsUpdated] = useState(comments);
   const {
     // newJourney: { currentUser },
     friends: { feedItemCommentsOpened },
   } = useAppSelector((state) => state);
   const dispatch = useAppDispatch();
+
+  let handleInputSent = async (props: IInputValue) => {
+    console.log(props);
+    const { inputValue, docID, photoURL, displayName, uid } = props;
+    const feedPostRef = doc(db, 'feed', `${docID}`);
+
+    await updateDoc(feedPostRef, {
+      comments: arrayUnion({ comment: inputValue, photoURL, displayName, uid }),
+    });
+
+    setInputValue('');
+  };
+
   return (
     <Wrapper>
       {/* =========1/3================================ */}
       <div className='user-info-container'>
-        <img src={url} alt='' />
+        <img src={photoURL} alt='' />
         <p className='userName'>{displayName}</p>
       </div>
       {/* =========2/3================================ */}
       <div className='attraction-img-container'>
-        <img src={attrectionUrl} alt='' />
-        <div className='swg-flex-container'>
-          <button className='likes flex-container'>
-            <AiOutlineHeart />
-            <p className='counter'>3</p>
-          </button>
-          <button
-            className='comments flex-container'
-            type='button'
-            onClick={() => setToggle(!toggle)}
-          >
-            <BiComment />
-            <p className='counter'>3</p>
-          </button>
-        </div>
+        <img src={photo} alt={name} />
+        {/* <AnimatePresence> */}
+        {!toggleComment && (
+          <div className='swg-flex-container'>
+            <button className='likes flex-container'>
+              <AiOutlineHeart />
+              <p className='counter'>{likes.length}</p>
+            </button>
+            <button
+              className='comments flex-container'
+              type='button'
+              onClick={() => setToggleComment(!toggleComment)}
+            >
+              <BiComment />
+              <p className='counter'>{commentsUpdated.length}</p>
+            </button>
+          </div>
+        )}
+        {/* </AnimatePresence> */}
         {/* ===========COMMENTS SECTION======================= */}
         <AnimatePresence>
-          {toggle && (
+          {toggleComment && (
             <CommentsWrapper
               initial={{ opacity: 0, height: '1%' }}
               animate={{ opacity: 1, height: '100%' }}
               exit={{ opacity: 0, height: '1%' }}
               transition={{ ease: 'easeOut', duration: 0.4 }}
             >
-              <div className='comments-section'></div>
-              <button
-                type='button'
-                className='escapeButton'
-                onClick={() => setToggle(!toggle)}
-              >
-                <FaRegTimesCircle />
-              </button>
+              <div className='comments-section'>
+                <button
+                  type='button'
+                  className='escapeButton'
+                  onClick={() => setToggleComment(!toggleComment)}
+                >
+                  <FaRegTimesCircle />
+                </button>
+              </div>
             </CommentsWrapper>
           )}
         </AnimatePresence>
@@ -70,11 +126,18 @@ function FeedItem() {
       {/* =========3/3================================ */}
 
       <div className='comment-section-container'>
-        <input type='text' placeholder='comment...'></input>
+        <input
+          type='text'
+          placeholder='comment...'
+          value={inputValue}
+          onChange={(event) => setInputValue(event.target.value)}
+        ></input>
         <button
           type='button'
           className='svg-sent'
-          onClick={() => console.log('click')}
+          onClick={() =>
+            handleInputSent({ inputValue, docID, photoURL, displayName, uid })
+          }
         >
           <FiSend />
         </button>

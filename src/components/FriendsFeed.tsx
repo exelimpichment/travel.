@@ -2,21 +2,73 @@ import { collection, doc, getDoc, getDocs } from 'firebase/firestore';
 import { motion } from 'framer-motion';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { setFriendsFeedArr } from '../features/Friends/FriendsSlice';
 import { db } from '../firebase/firebaseConfig';
-import { useAppSelector } from '../hooks/reduxHooks';
+import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks';
 import FeedItem from './FeedItem';
 
+interface IFriendsFeed {
+  displayName: string;
+  email: string;
+  friends: string[];
+  latitude: string;
+  likes: string[];
+  location_id: string;
+  longitude: string;
+  name: string;
+  photo: string;
+  photoURL: string;
+  uid: string;
+  docID: string;
+  comments: object[];
+}
+
 function FriendsFeed() {
+  const dispatch = useAppDispatch();
   const {
-    friends: { searchedFriend },
+    friends: { friendsFeedArr },
   } = useAppSelector((state) => state);
 
   const getFeed = async () => {
+    console.log('get feed');
+
     const querySnapshot = await getDocs(collection(db, 'feed'));
+    let friendsFeed: IFriendsFeed[] = [];
     querySnapshot.forEach((doc) => {
-      // doc.data() is never undefined for query doc snapshots
-      console.log(doc.id, ' => ', doc.data());
+      let docID = doc.id;
+      const {
+        displayName,
+        email,
+        friends,
+        latitude,
+        likes,
+        location_id,
+        longitude,
+        name,
+        photo,
+        photoURL,
+        uid,
+        comments,
+        // i do not need createdAt field
+      } = doc.data();
+      friendsFeed.push({
+        displayName,
+        email,
+        friends,
+        latitude,
+        likes,
+        location_id,
+        longitude,
+        name,
+        photo,
+        photoURL,
+        uid,
+        docID,
+        comments,
+      });
     });
+    console.log(friendsFeed);
+    dispatch(setFriendsFeedArr(friendsFeed));
   };
 
   useEffect(() => {
@@ -25,37 +77,13 @@ function FriendsFeed() {
 
   return (
     <Wrapper>
-      <FeedItem></FeedItem>
-      <FeedItem></FeedItem>
-      <FeedItem></FeedItem>
-      <FeedItem></FeedItem>
-      {/* <FeedItem></FeedItem>
-      <FeedItem></FeedItem>
-      <FeedItem></FeedItem>
-      <FeedItem></FeedItem> */}
-      {/* <h1>lol</h1>
-      <h1>lol</h1>
-      <h1>lol</h1>
-      <h1>lol</h1>
-      <h1>lol</h1>
-      <h1>lol</h1>
-      <h1>lol</h1>
-      <h1>lol</h1>
-      <h1>lol</h1>
-      <h1>lol</h1>
-      <h1>lol</h1>
-      <h1>lol</h1>
-      <h1>lol</h1>
-      <h1>lol</h1>
-      <h1>lol</h1>
-      <h1>lol</h1>
-      <h1>lol</h1>
-      <h1>lol</h1>
-      <h1>lol</h1>
-      <h1>lol</h1> */}
-      {/* <div className='empty-feed-container'>
-        <h1 className='empty-feed'>Your feed is empty</h1>
-      </div> */}
+      {friendsFeedArr.length > 1 ? (
+        friendsFeedArr.map((friend) => <FeedItem friend={friend}></FeedItem>)
+      ) : (
+        <div className='empty-feed-container'>
+          <h1 className='empty-feed'>Your feed is empty</h1>
+        </div>
+      )}
     </Wrapper>
   );
 }

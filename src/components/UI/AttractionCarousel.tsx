@@ -35,6 +35,21 @@ import {
 } from '../../features/NewJourney/NewJourneySlice';
 import { toast } from 'react-toastify';
 
+interface Bookmark extends User {
+  name: string;
+  location_id: string;
+  photo: string;
+  latitude: string;
+  longitude: string;
+  createdAt?: any;
+}
+
+interface IFeedItem extends Bookmark {
+  friends: string[];
+  likes: string[];
+  comments: object[];
+}
+
 function AttractionCarousel() {
   const dispatch = useAppDispatch();
   // const ScrollCarouselY = useRef<null | HTMLDanivElement>(null);
@@ -79,7 +94,7 @@ function AttractionCarousel() {
     photo: string;
     latitude: string;
     longitude: string;
-    createdAt: any;
+    createdAt?: any;
   }
 
   useEffect(() => {
@@ -123,10 +138,6 @@ function AttractionCarousel() {
 
   //   dispatch(setElementRef(refs));
   // }, [attractions]);
-  interface IFeedItem extends Bookmark {
-    friends: string[];
-    likes: string[];
-  }
 
   const addToFeed = async (feedItem: IFeedItem) => {
     const docRef = await addDoc(collection(db, 'feed'), {
@@ -213,6 +224,7 @@ function AttractionCarousel() {
                           createdAt: serverTimestamp(),
                           friends: friends,
                           likes: [],
+                          comments: [],
                         });
                       }
                     }

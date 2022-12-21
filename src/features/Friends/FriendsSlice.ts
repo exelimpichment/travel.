@@ -18,6 +18,7 @@ interface FriendsState {
   friends: string[];
   detailedFriends: IFriend[];
   feedItemCommentsOpened: boolean;
+  friendsFeedArr: [];
 }
 
 const initialState: FriendsState = {
@@ -28,6 +29,7 @@ const initialState: FriendsState = {
   searchedFriend: null,
   friends: [],
   detailedFriends: [],
+  friendsFeedArr: [],
 };
 
 export const friendsSlice = createSlice({
@@ -55,6 +57,9 @@ export const friendsSlice = createSlice({
     setFeedItemCommentsOpened: (state) => {
       state.feedItemCommentsOpened = !state.feedItemCommentsOpened;
     },
+    setFriendsFeedArr: (state, action) => {
+      state.friendsFeedArr = action.payload;
+    },
   },
 });
 
@@ -66,6 +71,7 @@ export const {
   setFriends,
   setDetailedFriends,
   setFeedItemCommentsOpened,
+  setFriendsFeedArr,
 } = friendsSlice.actions;
 
 // export const selectBookmarks = (state: RootState) => state.bookMarks.test;
